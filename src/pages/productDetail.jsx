@@ -19,7 +19,7 @@ export const productMRP = (productData) => {
   return { increaseQty, decreaseQty, totalPrice, quantity } 
 }
 
-const productDetail = () => {
+const ProductDetail = () => {
   const { addToCart } = useContext(CartContext);
   const { productId } = useParams();
   
@@ -110,4 +110,4 @@ const productDetail = () => {
   );
 };
 
-export default productDetail;
+export default ProductDetail;
