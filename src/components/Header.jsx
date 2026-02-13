@@ -16,7 +16,7 @@ const Header = () => {
           </form>
 
           <div className="d-flex align-items-center gap-3">
-            <button className="btn btn-secondary">Login</button>
+            <Link to={`/userProfile`}><i className="fw-bolder fs-3 bi bi-person text-black"></i></Link>
             <Link to={`/wishList`}><i className="bi bi-heart fs-5 text-danger"></i></Link>
             <Link to={`/cart`} style={{ textDecoration: 'none', color: '#000'}}><h6><i className="b bi-cart fs-5"></i>Cart</h6></Link>
           </div>
@@ -25,5 +25,4 @@ const Header = () => {
     </>
   );
 };
-9
 export default Header;
