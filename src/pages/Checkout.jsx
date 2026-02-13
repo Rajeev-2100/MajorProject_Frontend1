@@ -56,7 +56,7 @@ const Checkout = () => {
       console.error("Error saving address:", error);
       setFormSubmitted("Error saving address");
     }
-  }; 
+  };
 
   const handleEditClick = (addr) => {
     setAddress(addr.address);
@@ -79,7 +79,16 @@ const Checkout = () => {
     <>
       <Header />
       <main className="container py-5">
-        <h2 className="mb-3">CheckOut</h2>
+        <h1 className="mb-4 ">CheckOut</h1>
+
+        {userDetails?.map((user) => (
+          <>
+            <h2>User Profile</h2>
+            <p>Name: {user.name}</p>
+            <p>Email: {user.email}</p>
+            <p>Phone Number: {user.number}</p>
+          </>
+        ))}
 
         <div>
           {cart.map((item) => (
@@ -89,7 +98,7 @@ const Checkout = () => {
                 <h6>Quantity: {item.productQuantity}</h6>
               </div>
               <div>
-                <h6>Price: ${item.productPrice}</h6>
+                <h4>Price: ${item.productPrice}</h4>
               </div>
             </div>
           ))}
@@ -194,9 +203,7 @@ const Checkout = () => {
                   </li>
                 ))}
                 {deletedMessage && (
-                  <p className="p-3 alert alert-info mt-2">
-                    {deletedMessage}
-                  </p>
+                  <p className="p-3 alert alert-info mt-2">{deletedMessage}</p>
                 )}
               </ul>
             </div>
