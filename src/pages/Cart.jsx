@@ -9,9 +9,12 @@ const Cart = () => {
     useContext(CartContext);
 
   const totalPrice = cart.reduce(
-    (acc, curr) => acc + curr.productPrice * curr.productQuantity,
+    (acc, curr) => acc + curr.product.productPrice * curr.productQuantity,
     0
   );
+  console.log(totalPrice)
+
+  console.log('Cart Data: ',cart)
 
   return (
     <>
@@ -27,29 +30,30 @@ const Cart = () => {
           <div className="row">
             <div className="col-md-8">
               {cart.map((item) => (
+                // console.log(item),
                 <div key={item._id} className="card mb-4">
                   <div className="row g-0">
                     <div className="col-md-4">
                       <img
-                        src={item.productImage}
+                        src={item.product.productImage}
                         className="img-fluid rounded-start h-100 object-fit-cover"
-                        alt={item.productName}
+                        alt={item.product.productName}
                       />
                     </div>
 
                     <div className="col-md-8">
                       <div className="card-body">
-                        <h5>{item.productName}</h5>
-                        <p className="mb-1">${item.productPrice}</p>
+                        <h5>{item.product.productName}</h5>
+                        <p className="mb-1">${item.product.productPrice}</p>
                         <small className="text-muted">
-                          Discount: {item.discountPrice}%
+                          Discount: {item.product.discountPrice}%
                         </small>
 
                         <div className="d-flex align-items-center gap-3 mt-3">
                           <i
                             className="bi bi-dash-circle-fill"
                             style={{ cursor: "pointer" }}
-                            onClick={() => decreaseQty(item._id)}
+                            onClick={() => decreaseQty(item.product._id, item.productQuantity)}
                           ></i>
 
                           <span>Quantity: {item.productQuantity}</span>
@@ -57,7 +61,7 @@ const Cart = () => {
                           <i
                             className="bi bi-plus-circle-fill"
                             style={{ cursor: "pointer" }}
-                            onClick={() => increaseQty(item._id)}
+                            onClick={() => increaseQty(item.product._id, item.productQuantity)}
                           ></i>
                         </div>
 
@@ -72,7 +76,7 @@ const Cart = () => {
                           <Link
                             to="/wishList"
                             className="btn btn-outline-secondary btn-sm"
-                            onClick={() => addToWishList(item)}
+                            onClick={() => addToWishList(item.product)}
                           >
                             Move to Wishlist
                           </Link>

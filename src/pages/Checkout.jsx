@@ -28,7 +28,7 @@ const Checkout = () => {
 
   const DELIVERY_CHARGES = 125;
   const subtotal = cart.reduce((acc, curr) => {
-    let sum = acc + curr.productPrice * curr.productQuantity;
+    let sum = acc + curr.product.productPrice * curr.productQuantity;
     return sum;
   }, 0);
   const totalPrice = subtotal + DELIVERY_CHARGES;
@@ -92,15 +92,17 @@ const Checkout = () => {
 
         <div>
           {cart.map((item) => (
-            <div key={item.id} className="d-flex justify-content-between">
-              <div>
-                <h5 className="my-3">{item.productName}</h5>
-                <h6>Quantity: {item.productQuantity}</h6>
+            <>
+              <div key={item.id} className="d-flex justify-content-between">
+                <div>
+                  <h5 className="my-3">{item.product.productName}</h5>
+                  <h6>Quantity: {item.productQuantity}</h6>
+                </div>
+                <div>
+                  <h4>Total Price: ${item.product.productPrice}</h4>
+                </div>
               </div>
-              <div>
-                <h4>Price: ${item.productPrice}</h4>
-              </div>
-            </div>
+            </>
           ))}
         </div>
 

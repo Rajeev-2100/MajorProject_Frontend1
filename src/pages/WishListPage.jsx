@@ -6,7 +6,6 @@ import CartContext from "../useContext/Cart";
 
 const WishListPage = () => {
   const { wishList, addToCart, removeToWishlist } = useContext(CartContext);
-//   console.log('Add to Cart: ', addToCart)
 
   console.log('WishList: ', wishList)
 
@@ -21,17 +20,17 @@ const WishListPage = () => {
         ) : (
           <div className="d-flex flex-wrap justify-content-between gap-5">
             {wishList.map((item) => (
+            console.log('Helo:', item.id),
               <div className="card" key={item._id} style={{ width: "20rem" }}>
                 <img
-                  src={item.productImage}
+                  src={item.product.productImage}
                   className="card-img-top"
-                  alt={item.productName}
+                  alt={item.product.productName}
                   style={{ height: "200px", objectFit: "cover" }}
                 />
-
                 <div className="card-body text-center">
-                  <h6 className="card-title">{item.productName}</h6>
-                  <h5>${item.productPrice}</h5>
+                  <h6 className="card-title">{item.product.productName}</h6>
+                  <h5>${item.product.productPrice}</h5>
                   <div className="d-flex gap-3">
                     <Link
                     to={`/cart`}
@@ -39,7 +38,7 @@ const WishListPage = () => {
                     className="btn btn-secondary">
                     Move to Cart
                   </Link>
-                  <Link className="btn btn-secondary" to={`/wishList`} onClick={() => removeToWishlist(item)}>
+                  <Link className="btn btn-secondary" to={`/wishList`} onClick={() => removeToWishlist(item.id)}>
                   Remove WishList 
                   </Link>
                   </div>
