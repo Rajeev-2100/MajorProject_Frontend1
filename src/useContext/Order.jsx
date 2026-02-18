@@ -1,0 +1,94 @@
+import { createContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+const OrderContext = createContext();
+
+export const OrderProvider = ({ children }) => {
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handlePayment = async (
+    userDetailId,
+    userAddressId,
+    cartProductQuantity,
+    cartId
+  ) => {
+    try {
+      setLoading(true);
+
+      const res = await fetch("http://localhost:3001/api/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product: cartId,
+          user: userDetailId,
+          address: userAddressId,
+          quantity: cartProductQuantity,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message);
+
+      setOrders((prev) => [...prev, data.order]);
+      navigate("/order");
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false); // 🔥 IMPORTANT
+    }
+  };
+
+  const handleAllOrderData = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("http://localhost:3001/api/order");
+      const data = await res.json();
+
+      setOrders(data.data || []);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false); // 🔥 IMPORTANT
+    }
+  };
+
+  const handleOrderDataByOrderId = async (orderId) => {
+    if (!orderId) return;
+
+    try {
+      setLoading(true);
+      setSelectedOrder(null); // 🔥 RESET
+
+      const res = await fetch(
+        `http://localhost:3001/api/order/${orderId}`
+      );
+      const data = await res.json();
+
+      setSelectedOrder(data.order || data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false); // 🔥 MAIN FIX
+    }
+  };
+
+  return (
+    <OrderContext.Provider
+      value={{
+        orders,
+        loading,
+        selectedOrder,
+        handlePayment,
+        handleAllOrderData,
+        handleOrderDataByOrderId,
+      }}
+    >
+      {children}
+    </OrderContext.Provider>
+  );
+};
+
+export default OrderContext;

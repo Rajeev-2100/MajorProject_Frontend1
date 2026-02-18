@@ -3,8 +3,12 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import CartContext from "../useContext/Cart";
 import UserContext from "../useContext/User";
+import { Link } from "react-router";
+import OrderContext from "../useContext/Order";
 
 const Checkout = () => {
+  const { handlePayment, loading } = useContext(OrderContext);
+
   const {
     userDetails,
     userAddress,
@@ -23,8 +27,16 @@ const Checkout = () => {
   const [editingAddressId, setEditingAddressId] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
 
-  // console.log('User Details: ', userDetails)
-  // console.log('User Address: ', userAddress)
+  const placeOrderFromCart = async () => {
+    for (const item of cart) {
+      await handlePayment(
+        userDetails[0]._id,
+        selectedAddressId,
+        item.productQuantity,
+        item.product._id,
+      );
+    }
+  };
 
   const DELIVERY_CHARGES = 125;
   const subtotal = cart.reduce((acc, curr) => {
@@ -32,6 +44,7 @@ const Checkout = () => {
     return sum;
   }, 0);
   const totalPrice = subtotal + DELIVERY_CHARGES;
+  console.log("TotalPrice: ", totalPrice);
 
   const formHandler = async (e) => {
     e.preventDefault();
@@ -69,10 +82,6 @@ const Checkout = () => {
     if (selectedAddressId === addrId) {
       setSelectedAddressId(null);
     }
-  };
-
-  const handlePayment = () => {
-    return alert("Your Order Successfully");
   };
 
   return (
@@ -214,8 +223,11 @@ const Checkout = () => {
 
         {selectedAddressId && cart.length > 0 && (
           <div className="text-center mt-4">
-            <button className="btn btn-success btn-lg" onClick={handlePayment}>
-              Proceed to Payment (${totalPrice.toFixed(2)})
+            <button
+              className="btn btn-success btn-lg"
+              onClick={placeOrderFromCart}
+            >
+              {loading ? "Processing..." : "Proceed to Payment"}
             </button>
           </div>
         )}
