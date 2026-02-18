@@ -60,7 +60,7 @@ const ProductDetail = () => {
               >
                 Add to Cart
               </Link>
-              <Link className="btn btn-primary m-3">Buy to Now</Link>
+              <Link to={`/checkOut`} className="btn btn-primary m-3">Buy to Now</Link>
             </div>
           </div>
           <div className="p-2 mx-5 fs-5">
