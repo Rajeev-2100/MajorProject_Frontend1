@@ -4,12 +4,8 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 const UserProfile = () => {
-  const [selectedAddressId, setSelectedAddressId] = useState(null);
-  const [editingAddressId, setEditingAddressId] = useState(null);
-
   const {
     userDetails,
-    userAddress,
     deletedMessage,
     formHandler,
     handleDelete,
@@ -21,7 +17,12 @@ const UserProfile = () => {
     setAddress,
     location,
     setLocation,
+    editingAddressId,
+    userAddress,
+    setEditingAddressId,
   } = useContext(UserContext);
+
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
 
   return (
     <>
@@ -115,7 +116,7 @@ const UserProfile = () => {
                           name="deliveryAddress"
                           id={`addr-${addr._id}`}
                           checked={selectedAddressId === addr._id}
-                          onChange={() => setSelectedAddressId(addr._id)} 
+                          onChange={() => setSelectedAddressId(addr._id)}
                         />
                       </div>
                       <div className="flex-grow-1">
@@ -132,7 +133,7 @@ const UserProfile = () => {
                         </button>
                         <button
                           className="btn btn-warning btn-sm"
-                          onClick={() => handleEditClick(addr)} 
+                          onClick={() => handleEditClick(addr)}
                         >
                           Update Addr
                         </button>

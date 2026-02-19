@@ -5,17 +5,27 @@ const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
   const [formSubmitted, setFormSubmitted] = useState("");
+  const [userAddress, setUserAddress] = useState([]);
   const [deletedMessage, setDeletedMessage] = useState("");
   const [address, setAddress] = useState("");
   const [location, setLocation] = useState("");
   const [selectedDeliveryAddress, setSelectedDeliveryAddress] = useState(null);
   const [editingAddressId, setEditingAddressId] = useState(null);
 
-  const { data: getUserDetails } = useFetch("https://major-project-backend1.vercel.app/api/user");
-  const { data: getApiAddress } = useFetch("https://major-project-backend1.vercel.app/api/address");
+  const { data: getUserDetails } = useFetch(
+    "https://major-project-backend1.vercel.app/api/user",
+  );
+  const { data: getApiAddress } = useFetch(
+    "https://major-project-backend1.vercel.app/api/address",
+  );
 
   const userDetails = getUserDetails?.data || [];
-  const userAddress = getApiAddress?.data || [];
+  const userAddressData = getApiAddress?.data || []
+
+
+  if(userAddress.length === 0 && userAddressData.length > 0){
+    setUserAddress(userAddressData)
+  }
 
   const updateUserAddress = async (userAddressId, addressData) => {
     try {
@@ -33,7 +43,9 @@ export const UserProvider = ({ children }) => {
       if (!res.ok) throw new Error("Failed to update address");
 
       const data = await res.json();
-      console.log("Update Address: ", data);
+      setUserAddress((prev) =>
+        prev.map((addr) => (addr._id === userAddressId ? data.data : addr)),
+      );
       setFormSubmitted("Address updated successfully!");
       setAddress("");
       setLocation("");
@@ -55,7 +67,9 @@ export const UserProvider = ({ children }) => {
       if (!res.ok) throw new Error("Failed to delete address");
 
       const data = await res.json();
-      console.log("Deleted:", data);
+      setUserAddress((prev) =>
+        prev.filter((addr) => addr._id !== userAddressId),
+      );
       setDeletedMessage("Address deleted successfully!");
     } catch (error) {
       console.error("Error deleting address:", error);
@@ -79,19 +93,23 @@ export const UserProvider = ({ children }) => {
       setEditingAddressId(null);
     } else {
       try {
-        const res = await fetch("https://major-project-backend1.vercel.app/api/address", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const res = await fetch(
+          "https://major-project-backend1.vercel.app/api/address",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              address,
+              location,
+            }),
           },
-          body: JSON.stringify({
-            address,
-            location,
-          }),
-        });
+        );
 
         const responseData = await res.json();
-        console.log("Address saved: ", responseData);
+        setUserAddress((prev) => [...prev, responseData.data]);
+        // console.log("Address saved: ", responseData);
         setFormSubmitted("Address added successfully!");
       } catch (error) {
         console.error("Error saving address:", error);
@@ -110,7 +128,7 @@ export const UserProvider = ({ children }) => {
 
   const handleDelete = (addrId) => {
     deletedUserAddress(addrId);
-    if (selectedAddressId === addrId) {
+    if (selectDeliveryAddress?._id === addrId) {
       setSelectedAddressId(null);
     }
   };
@@ -119,7 +137,6 @@ export const UserProvider = ({ children }) => {
     <UserContext.Provider
       value={{
         userDetails,
-        userAddress,
         formHandler,
         handleEditClick,
         handleDelete,
@@ -127,8 +144,11 @@ export const UserProvider = ({ children }) => {
         deletedUserAddress,
         deletedMessage,
         formSubmitted,
+        setUserAddress,
         setFormSubmitted,
         setDeletedMessage,
+        getApiAddress,
+        userAddress,
         address,
         setAddress,
         location,
