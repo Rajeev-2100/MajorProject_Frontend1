@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import useFetch from "../useFetch.jsx";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+import Footer from "../components/Footer.jsx";
+import Header from "../components/Header.jsx";
 import { useContext, useState } from "react";
 import CartContext from "../useContext/Cart.jsx";
 

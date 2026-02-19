@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import App from "./App.jsx";
 import ProductListing from "./pages/ProductListing.jsx";
-import ProductDetail from "./pages/ProductDetail.jsx";
+import ProductDetail from "./pages/productDetail.jsx";
 import { CartProvider } from "./useContext/Cart.jsx";
 import Cart from "./pages/Cart.jsx";
 import WishListPage from "./pages/WishListPage.jsx";
