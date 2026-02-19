@@ -6,25 +6,28 @@ import { useContext, useState } from "react";
 import CartContext from "../useContext/Cart.jsx";
 
 const ProductListing = () => {
+  const [searchTerm, setSearchTerm] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [rating, setRating] = useState(0);
   const [sortBy, setSortBy] = useState(false);
 
-  const { data, loading, error } = useFetch(
-    "http://localhost:3001/api/products",
-  );
-  
+  const url = searchTerm ? `http://localhost:3001/api/productsDetail/${searchTerm}` :  `http://localhost:3001/api/products`
+
+  const { data, loading, error } = useFetch(url)
+
   const productData = data?.data ? data?.data : [];
-  
-  const { addToCart, addToWishList } = useContext(CartContext);  
+
+  const { addToCart, addToWishList } = useContext(CartContext);
 
   const filteredProducts = productData?.filter((product) => {
-    
+    const searchMatch = searchTerm ? product.productName.toLowerCase().includes(searchTerm.toLowerCase()) : true;
     const priceMatch = price ? product.productPrice <= price : true;
-    const categoryMatch = category ? category === product.categoryField.category : true;
+    const categoryMatch = category
+      ? category === product.categoryField.category
+      : true;
     const ratingMatch = rating ? product.rating >= rating : true;
-    return priceMatch && categoryMatch && ratingMatch;
+    return priceMatch && categoryMatch && ratingMatch && searchMatch
   });
 
   const SortByProduct = [...filteredProducts].sort((a, b) => {
@@ -41,7 +44,7 @@ const ProductListing = () => {
 
   return (
     <>
-      <Header />
+      <Header setSearchTerm={setSearchTerm}/>
       <main className="container py-5">
         {loading && (
           <>
@@ -98,7 +101,7 @@ const ProductListing = () => {
               <br />
               <input
                 type="checkbox"
-                onChange={(e) => setCategory(e.target.checked ? 'Men' : "")}
+                onChange={(e) => setCategory(e.target.checked ? "Men" : "")}
                 checked={category === "Men"}
                 id=""
                 value="Men"
@@ -107,8 +110,8 @@ const ProductListing = () => {
               <br />
               <input
                 type="checkbox"
-                onChange={(e) => setCategory(e.target.checked ? 'Women' : "")}
-                checked={category === 'Women'}
+                onChange={(e) => setCategory(e.target.checked ? "Women" : "")}
+                checked={category === "Women"}
                 id=""
                 value="Women"
               />{" "}
@@ -204,8 +207,14 @@ const ProductListing = () => {
                     className="card d-flex align-items-center justify-content-center"
                     style={{ width: "18rem" }}
                   >
-                    <div className="card d-flex align-items-center justify-content-center" style={{ width: "18rem" }}>
-                      <i className="card-img-overlay bi bi-heart-fill text-danger fs-3" onClick={() => addToWishList(product)}></i>
+                    <div
+                      className="card d-flex align-items-center justify-content-center"
+                      style={{ width: "18rem" }}
+                    >
+                      <i
+                        className="card-img-overlay bi bi-heart-fill text-danger fs-3"
+                        onClick={() => addToWishList(product)}
+                      ></i>
                       <img
                         src={product.productImage}
                         className="img-fluid card-img h-100 object-fit-cover card-img-top"

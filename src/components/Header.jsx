@@ -1,6 +1,16 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
-const Header = () => {
+const Header = ({ setSearchTerm }) => {
+
+  const [search, setSearch] = useState("");
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearch(value);
+    setSearchTerm(value);
+  };
+  
   return (
     <>
       <header className="bg-body-tertiary ">
@@ -12,13 +22,30 @@ const Header = () => {
           </div>
 
           <form className="d-flex mx-auto w-50">
-            <input class="form-control" type="search" placeholder="Search" />
+            <input
+              class="form-control"
+              type="search"
+              placeholder="Search By Title..."
+              value={search}
+              onChange={handleSearch}
+            />
           </form>
 
           <div className="d-flex align-items-center gap-3">
-            <Link to={`/userProfile`}><i className="fw-bolder fs-3 bi bi-person text-black"></i></Link>
-            <Link to={`/wishList`}><i className="bi bi-heart fs-5 text-danger"></i></Link>
-            <Link to={`/cart`} style={{ textDecoration: 'none', color: '#000'}}><h6><i className="b bi-cart fs-5"></i>Cart</h6></Link>
+            <Link to={`/userProfile`}>
+              <i className="fw-bolder fs-3 bi bi-person text-black"></i>
+            </Link>
+            <Link to={`/wishList`}>
+              <i className="bi bi-heart fs-5 text-danger"></i>
+            </Link>
+            <Link
+              to={`/cart`}
+              style={{ textDecoration: "none", color: "#000" }}
+            >
+              <h6>
+                <i className="b bi-cart fs-5"></i>Cart
+              </h6>
+            </Link>
           </div>
         </nav>
       </header>
