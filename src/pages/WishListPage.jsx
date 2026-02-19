@@ -34,7 +34,7 @@ const WishListPage = () => {
                   <div className="d-flex gap-3">
                     <Link
                     to={`/cart`}
-                    onClick={() => addToCart(item)}
+                    onClick={() => addToCart(item.product)}
                     className="btn btn-secondary">
                     Move to Cart
                   </Link>
