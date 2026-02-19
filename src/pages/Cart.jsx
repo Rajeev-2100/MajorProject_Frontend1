@@ -36,9 +36,9 @@ const Cart = () => {
                     <div className="col-md-4">
                       <img
                         src={item.product.productImage}
-                        className="img-fluid rounded-start h-100 object-fit-cover"
+                        className="img-fluid rounded-start h-100 object-fit-cover "
                         alt={item.product.productName}
-                      />
+                      />  
                     </div>
 
                     <div className="col-md-8">

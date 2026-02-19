@@ -18,7 +18,7 @@ export const OrderProvider = ({ children }) => {
     try {
       setLoading(true);
 
-      const res = await fetch("http://localhost:3001/api/order", {
+      const res = await fetch("https://major-project-backend1.vercel.app/api/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -37,21 +37,21 @@ export const OrderProvider = ({ children }) => {
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false); // 🔥 IMPORTANT
+      setLoading(false); 
     }
   };
 
   const handleAllOrderData = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3001/api/order");
+      const res = await fetch("https://major-project-backend1.vercel.app/api/order");
       const data = await res.json();
 
       setOrders(data.data || []);
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false); // 🔥 IMPORTANT
+      setLoading(false); 
     }
   };
 
@@ -60,10 +60,10 @@ export const OrderProvider = ({ children }) => {
 
     try {
       setLoading(true);
-      setSelectedOrder(null); // 🔥 RESET
+      setSelectedOrder(null); 
 
       const res = await fetch(
-        `http://localhost:3001/api/order/${orderId}`
+        `https://major-project-backend1.vercel.app/api/order/${orderId}`
       );
       const data = await res.json();
 
@@ -71,7 +71,7 @@ export const OrderProvider = ({ children }) => {
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false); // 🔥 MAIN FIX
+      setLoading(false); 
     }
   };
 

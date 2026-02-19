@@ -24,7 +24,7 @@ const ProductDetail = () => {
   const { productId } = useParams();
   
   const { data, loading, error } = useFetch(
-    `http://localhost:3001/api/products/${productId}`,
+    `https://major-project-backend1.vercel.app/api/products/${productId}`,
   );
 
   const productData = data?.data;

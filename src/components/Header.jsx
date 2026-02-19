@@ -10,20 +10,29 @@ const Header = ({ setSearchTerm }) => {
     setSearch(value);
     setSearchTerm(value);
   };
-  
-  return (
-    <>
-      <header className="bg-body-tertiary ">
-        <nav className="navbar navbar-expand-lg container d-flex justify-content-between align-items-center">
-          <div className="">
-            <a className="navbar-brand fw-bold" href="/">
-              MyShoppingSite
-            </a>
-          </div>
 
-          <form className="d-flex mx-auto w-50">
+  return (
+    <header className="bg-body-tertiary shadow-sm">
+      <nav className="navbar navbar-expand-lg container">
+
+        <Link className="navbar-brand fw-bold" to="/">
+          MyShoppingSite
+        </Link>
+
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarContent"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <div className="collapse navbar-collapse" id="navbarContent">
+
+          <form className="d-flex mx-auto my-2 my-lg-0 w-100 w-lg-50">
             <input
-              class="form-control"
+              className="form-control"
               type="search"
               placeholder="Search By Title..."
               value={search}
@@ -31,25 +40,31 @@ const Header = ({ setSearchTerm }) => {
             />
           </form>
 
-          <div className="d-flex align-items-center gap-3">
+          <div className="d-flex align-items-center gap-3 ms-lg-3 mt-3 mt-lg-0">
+
             <Link to={`/userProfile`}>
-              <i className="fw-bolder fs-3 bi bi-person text-black"></i>
+              <i className="bi bi-person fs-4 text-dark"></i>
             </Link>
+
             <Link to={`/wishList`}>
-              <i className="bi bi-heart fs-5 text-danger"></i>
+              <i className="bi bi-heart fs-4 text-danger"></i>
             </Link>
+
             <Link
               to={`/cart`}
-              style={{ textDecoration: "none", color: "#000" }}
+              className="text-decoration-none text-dark d-flex align-items-center gap-1"
             >
-              <h6>
-                <i className="b bi-cart fs-5"></i>Cart
-              </h6>
+              <i className="bi bi-cart fs-4"></i>
+              <span className="d-lg-inline d-none">Cart</span>
             </Link>
+
           </div>
-        </nav>
-      </header>
-    </>
+
+        </div>
+
+      </nav>
+    </header>
   );
 };
+
 export default Header;

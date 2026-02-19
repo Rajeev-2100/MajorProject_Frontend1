@@ -54,7 +54,7 @@ const Checkout = () => {
         setFormSubmitted("✅ Address updated successfully!");
         setEditingAddressId(null);
       } else {
-        const res = await fetch("http://localhost:3001/api/address", {
+        const res = await fetch("https://major-project-backend1.vercel.app/api/address", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ address, location }),

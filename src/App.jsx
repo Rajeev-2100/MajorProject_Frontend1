@@ -9,7 +9,7 @@ function App() {
     <>
       <Header />
       <main className="container py-5">
-        <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex justify-content-between align-items-center flex-wrap">
           <img src="https://placehold.net/avatar.svg" alt="" />
           <img src="https://placehold.net/avatar-5.png" alt="" />
           <img src="https://placehold.net/avatar.svg" alt="" />

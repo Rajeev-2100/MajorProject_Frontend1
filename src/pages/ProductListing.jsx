@@ -12,7 +12,7 @@ const ProductListing = () => {
   const [rating, setRating] = useState(0);
   const [sortBy, setSortBy] = useState(false);
 
-  const url = searchTerm ? `http://localhost:3001/api/productsDetail/${searchTerm}` :  `http://localhost:3001/api/products`
+  const url = searchTerm ? `https://major-project-backend1.vercel.app/api/productsDetails/${searchTerm}` :  `https://major-project-backend1.vercel.app/api/products`
 
   const { data, loading, error } = useFetch(url)
 

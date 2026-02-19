@@ -11,8 +11,8 @@ export const UserProvider = ({ children }) => {
   const [selectedDeliveryAddress, setSelectedDeliveryAddress] = useState(null);
   const [editingAddressId, setEditingAddressId] = useState(null);
 
-  const { data: getUserDetails } = useFetch("http://localhost:3001/api/user");
-  const { data: getApiAddress } = useFetch("http://localhost:3001/api/address");
+  const { data: getUserDetails } = useFetch("https://major-project-backend1.vercel.app/api/user");
+  const { data: getApiAddress } = useFetch("https://major-project-backend1.vercel.app/api/address");
 
   const userDetails = getUserDetails?.data || [];
   const userAddress = getApiAddress?.data || [];
@@ -20,7 +20,7 @@ export const UserProvider = ({ children }) => {
   const updateUserAddress = async (userAddressId, addressData) => {
     try {
       const res = await fetch(
-        `http://localhost:3001/api/address/${userAddressId}`,
+        `https://major-project-backend1.vercel.app/api/address/${userAddressId}`,
         {
           method: "PUT",
           headers: {
@@ -46,7 +46,7 @@ export const UserProvider = ({ children }) => {
   const deletedUserAddress = async (userAddressId) => {
     try {
       const res = await fetch(
-        `http://localhost:3001/api/address/${userAddressId}`,
+        `https://major-project-backend1.vercel.app/api/address/${userAddressId}`,
         {
           method: "DELETE",
         },
@@ -79,7 +79,7 @@ export const UserProvider = ({ children }) => {
       setEditingAddressId(null);
     } else {
       try {
-        const res = await fetch("http://localhost:3001/api/address", {
+        const res = await fetch("https://major-project-backend1.vercel.app/api/address", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -8,7 +8,7 @@ export const CartProvider = ({ children }) => {
 
   const addToCart = async (product) => {
     try {
-      const res = await fetch(`http://localhost:3001/api/cart/${product._id}`, {
+      const res = await fetch(`https://major-project-backend1.vercel.app/api/cart/${product._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -41,7 +41,7 @@ export const CartProvider = ({ children }) => {
   const removeFromCart = async (cartId) => {
     try {
       const res = await fetch(
-        `http://localhost:3001/api/deletedCart/${cartId}`,
+        `https://major-project-backend1.vercel.app/api/deletedCart/${cartId}`,
         {
           method: "DELETE",
         },
@@ -59,7 +59,7 @@ export const CartProvider = ({ children }) => {
 
   const increaseQty = async (productId, productQuantity) => {
     try {
-      await fetch(`http://localhost:3001/api/updatedCart/${productId}`, {
+      await fetch(`https://major-project-backend1.vercel.app/api/updatedCart/${productId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export const CartProvider = ({ children }) => {
 
   const decreaseQty = async (productId, productQuantity) => {
     try {
-      await fetch(`http://localhost:3001/api/updatedCart/${productId}`, {
+      await fetch(`https://major-project-backend1.vercel.app/api/updatedCart/${productId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ qty: productQuantity - 1 }),
@@ -104,7 +104,7 @@ export const CartProvider = ({ children }) => {
   const addToWishList = async (product) => {
     try {
       const res = await fetch(
-        `http://localhost:3001/api/wishlist/${product._id}`,
+        `https://major-project-backend1.vercel.app/api/wishlist/${product._id}`,
         {
           method: "POST",
         },
@@ -126,7 +126,7 @@ export const CartProvider = ({ children }) => {
   const removeToWishlist = async (wishlistId) => {
     try {
       const res = await fetch(
-        `http://localhost:3001/api/wishlist/${wishlistId}`,
+        `https://major-project-backend1.vercel.app/api/wishlist/${wishlistId}`,
         {
           method: "DELETE",
         },
