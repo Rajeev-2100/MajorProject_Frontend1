@@ -5,9 +5,12 @@ import Header from "../components/Header";
 import CartContext from "../useContext/Cart";
 
 const WishListPage = () => {
-  const { wishList, addToCart, removeToWishlist } = useContext(CartContext);
+  const { wishList, wishListLoaded, getAllWishListDetail, removeToWishlist, addToCart } = useContext(CartContext);
 
-  console.log('WishList: ', wishList)
+  if (!wishListLoaded) {
+    getAllWishListDetail();
+  }
+  console.log('Wishlist: ', wishList)
 
   return (
     <>
@@ -20,7 +23,7 @@ const WishListPage = () => {
         ) : (
           <div className="d-flex flex-wrap justify-content-between gap-5">
             {wishList.map((item) => (
-            console.log('Helo:', item.id),
+              // console.log('Helo:', item._id),
               <div className="card" key={item._id} style={{ width: "20rem" }}>
                 <img
                   src={item.product.productImage}
@@ -33,14 +36,19 @@ const WishListPage = () => {
                   <h5>${item.product.productPrice}</h5>
                   <div className="d-flex gap-3">
                     <Link
-                    to={`/cart`}
-                    onClick={() => addToCart(item.product)}
-                    className="btn btn-secondary">
-                    Move to Cart
-                  </Link>
-                  <Link className="btn btn-secondary" to={`/wishList`} onClick={() => removeToWishlist(item.id)}>
-                  Remove WishList 
-                  </Link>
+                      to={`/cart`}
+                      onClick={() => addToCart(item.product)}
+                      className="btn btn-secondary"
+                    >
+                      Move to Cart
+                    </Link>
+                    <Link
+                      className="btn btn-secondary"
+                      to={`/wishList`}
+                      onClick={() => removeToWishlist(item._id)}
+                    >
+                      Remove WishList
+                    </Link>
                   </div>
                 </div>
               </div>

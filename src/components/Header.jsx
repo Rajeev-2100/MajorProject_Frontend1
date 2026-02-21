@@ -1,7 +1,17 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import CartContext from "../useContext/Cart";
 
 const Header = ({ setSearchTerm }) => {
+  const { cart, wishList, cartLoaded, wishListLoaded, getAllCartDetail, getAllWishListDetail } = useContext(CartContext);
+
+  if (!cartLoaded) {
+    getAllCartDetail();
+  }
+
+  if (!wishListLoaded) {
+    getAllWishListDetail();
+  }
 
   const [search, setSearch] = useState("");
 
@@ -14,7 +24,6 @@ const Header = ({ setSearchTerm }) => {
   return (
     <header className="bg-body-tertiary shadow-sm">
       <nav className="navbar navbar-expand-lg container">
-
         <Link className="navbar-brand fw-bold" to="/">
           MyShoppingSite
         </Link>
@@ -29,7 +38,6 @@ const Header = ({ setSearchTerm }) => {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarContent">
-
           <form className="d-flex mx-auto my-2 my-lg-0 w-100 w-lg-50">
             <input
               className="form-control"
@@ -41,13 +49,13 @@ const Header = ({ setSearchTerm }) => {
           </form>
 
           <div className="d-flex align-items-center gap-3 ms-lg-3 mt-3 mt-lg-0">
-
             <Link to={`/userProfile`}>
               <i className="bi bi-person fs-4 text-dark"></i>
             </Link>
 
-            <Link to={`/wishList`}>
+            <Link to={`/wishList`} className="text-decoration-none text-dark d-flex align-items-center">
               <i className="bi bi-heart fs-4 text-danger"></i>
+              ({wishList.length})
             </Link>
 
             <Link
@@ -56,12 +64,10 @@ const Header = ({ setSearchTerm }) => {
             >
               <i className="bi bi-cart fs-4"></i>
               <span className="d-lg-inline d-none">Cart</span>
+              ({cart.length})
             </Link>
-
           </div>
-
         </div>
-
       </nav>
     </header>
   );

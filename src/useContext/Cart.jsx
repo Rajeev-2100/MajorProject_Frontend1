@@ -6,98 +6,164 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [wishList, setWishList] = useState([]);
 
+  const [cartLoaded, setCartLoaded] = useState(false);
+  const [wishListLoaded, setWishListLoaded] = useState(false);
+
+  const getAllCartDetail = async () => {
+    try {
+      if (cartLoaded) return;
+
+      const res = await fetch(
+        "https://major-project-backend1.vercel.app/api/cart",
+      );
+
+      const data = await res.json();
+
+      setCart(data?.data || []);
+      setCartLoaded(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const addToCart = async (product) => {
     try {
-      const res = await fetch(`https://major-project-backend1.vercel.app/api/cart/${product._id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        `https://major-project-backend1.vercel.app/api/cart/${product._id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            productQuantity: 1,
+          }),
         },
-        body: JSON.stringify({
-          productQuantity: 1,
-        }),
-      });
+      );
 
       const data = await res.json();
       const newCartItem = data?.data;
 
       setCart((prev) => {
         const existing = prev.find((item) => item.product._id === product._id);
+
         if (existing) {
           return prev.map((item) =>
             item.product._id === product._id
-              ? { ...item, productQuantity: item.productQuantity + 1 }
+              ? {
+                  ...item,
+                  productQuantity: item.productQuantity + 1,
+                }
               : item,
           );
         }
 
-        return [...prev, { _id: newCartItem._id, product, productQuantity: 1 }];
+        return [
+          ...prev,
+          {
+            _id: newCartItem._id,
+            product,
+            productQuantity: 1,
+          },
+        ];
       });
     } catch (error) {
-      console.error("Error adding to cart:", error);
+      console.error(error);
     }
   };
 
   const removeFromCart = async (cartId) => {
     try {
-      const res = await fetch(
+      await fetch(
         `https://major-project-backend1.vercel.app/api/deletedCart/${cartId}`,
         {
           method: "DELETE",
         },
       );
-      // console.log("CartId: ", cartId);
-      // console.log("Res: ", res);
-      if (!res.ok) {
-        throw new Error("Failed to delete cart item");
-      }
+
       setCart((prev) => prev.filter((item) => item._id !== cartId));
     } catch (error) {
-      console.error("Error removing from cart:", error);
+      console.error(error);
     }
   };
 
-  const increaseQty = async (productId, productQuantity) => {
+  const increaseQty = async (productId, qty) => {
     try {
-      await fetch(`https://major-project-backend1.vercel.app/api/updatedCart/${productId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
+      await fetch(
+        `https://major-project-backend1.vercel.app/api/updatedCart/${productId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            qty: qty + 1,
+          }),
         },
-        body: JSON.stringify({
-          qty: productQuantity + 1,
-        }),
-      });
+      );
 
       setCart((prev) =>
         prev.map((item) =>
           item.product._id === productId
-            ? { ...item, productQuantity: item.productQuantity + 1 }
+            ? {
+                ...item,
+                productQuantity: item.productQuantity + 1,
+              }
             : item,
         ),
       );
     } catch (error) {
-      console.error("Error increasing quantity:", error);
+      console.error(error);
     }
   };
 
-  const decreaseQty = async (productId, productQuantity) => {
+  const decreaseQty = async (productId, qty) => {
+    if (qty <= 1) return;
+
     try {
-      await fetch(`https://major-project-backend1.vercel.app/api/updatedCart/${productId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qty: productQuantity - 1 }),
-      });
+      await fetch(
+        `https://major-project-backend1.vercel.app/api/updatedCart/${productId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            qty: qty - 1,
+          }),
+        },
+      );
 
       setCart((prev) =>
         prev.map((item) =>
-          item.product._id === productId && item.productQuantity > 1
-            ? { ...item, productQuantity: item.productQuantity - 1 }
+          item.product._id === productId
+            ? {
+                ...item,
+                productQuantity: item.productQuantity - 1,
+              }
             : item,
         ),
       );
     } catch (error) {
-      console.error("Error decreasing quantity:", error);
+      console.error(error);
+    }
+  };
+
+  const getAllWishListDetail = async () => {
+    try {
+      if (wishListLoaded) return;
+
+      const res = await fetch(
+        "https://major-project-backend1.vercel.app/api/wishlist",
+      );
+
+      const data = await res.json();
+
+      setWishList(data?.data || []);
+
+      setWishListLoaded(true);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -110,16 +176,24 @@ export const CartProvider = ({ children }) => {
         },
       );
       const data = await res.json();
-      // console.log("Data: ", data);
-      // console.log("Product Details: ", product);
-      const newWishlist = data?.data;
-      // console.log("New Wishlist: ", newWishlist);
+
+      const newItem = data?.data;
+
       setWishList((prev) => {
-        const existing = prev.find((item) => item._id === product._id);
-        return existing ? prev : [...prev, { id: newWishlist._id, product }];
+        const exists = prev.find((item) => item.product._id === product._id);
+
+        if (exists) return prev;
+
+        return [
+          ...prev,
+          {
+            _id: newItem._id,
+            product,
+          },
+        ];
       });
     } catch (error) {
-      throw error;
+      console.error(error);
     }
   };
 
@@ -131,14 +205,10 @@ export const CartProvider = ({ children }) => {
           method: "DELETE",
         },
       );
-      // console.log('WishListId: ', wishlistId)
-      // console.log('Res: ',res)
-      if (!res.ok) {
-        throw new Error("Failed to delete cart item");
-      }
-      setWishList((prev) => prev.filter((item) => item.id !== wishlistId));
+      const data = res.json() 
+      setWishList((prev) => prev.filter((item) => item._id !== wishlistId));
     } catch (error) {
-      console.error("Error removing from Wishlist:", error);
+      console.error(error);
     }
   };
 
@@ -146,13 +216,17 @@ export const CartProvider = ({ children }) => {
     <CartContext.Provider
       value={{
         cart,
+        wishList,
+        cartLoaded,
+        wishListLoaded,
+        getAllCartDetail,
+        getAllWishListDetail,
         addToCart,
         removeFromCart,
-        wishList,
-        addToWishList,
-        removeToWishlist,
         increaseQty,
         decreaseQty,
+        addToWishList,
+        removeToWishlist,
       }}
     >
       {children}
