@@ -11,7 +11,7 @@ function App() {
     <>
       <Header />
       <main className="container py-5">
-        <div className="d-flex justify-content-between align-items-center flex-wrap">
+        <div className="d-flex justify-content-between align-items-center flex-wrap gap-4">
           <Link to={`/category/Women`}>
             <img
               src="https://img.freepik.com/free-photo/happy-young-woman-uses-her-phone-posing-with-colorful-shopping-bags-studio_8353-5606.jpg"
