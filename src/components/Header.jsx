@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
 import { useContext, useState } from "react";
 import CartContext from "../useContext/Cart";
+import ProductContext from "../useContext/product";
 
-const Header = ({ setSearchTerm }) => {
+const Header = () => {
+  const [search, setSearch] = useState("");
+  const { setSearchTerm } = useContext(ProductContext)
   const { cart, wishList, cartLoaded, wishListLoaded, getAllCartDetail, getAllWishListDetail } = useContext(CartContext);
 
   if (!cartLoaded) {
@@ -13,7 +16,6 @@ const Header = ({ setSearchTerm }) => {
     getAllWishListDetail();
   }
 
-  const [search, setSearch] = useState("");
 
   const handleSearch = (e) => {
     const value = e.target.value;

@@ -1,50 +1,54 @@
-import { Link } from "react-router-dom";
-import useFetch from "../useFetch.jsx";
+import { Link, useParams } from "react-router-dom";
 import Footer from "../components/Footer.jsx";
 import Header from "../components/Header.jsx";
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import CartContext from "../useContext/Cart.jsx";
+import ProductContext from "../useContext/product.jsx";
 
 const ProductListing = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
-  const [rating, setRating] = useState(0);
-  const [sortBy, setSortBy] = useState(false);
-
-  const url = searchTerm ? `https://major-project-backend1.vercel.app/api/productsDetails/${searchTerm}` :  `https://major-project-backend1.vercel.app/api/products`
-
-  const { data, loading, error } = useFetch(url)
-
-  const productData = data?.data ? data?.data : [];
+  const { categoryName } = useParams();
+  const {
+    setSearchTerm,
+    price,
+    category,
+    setCategory,
+    setRating,
+    setPrice,
+    setSortBy,
+    rating,
+    sortBy,
+    loading,
+    error,
+    sortedProducts,
+    categoryData,
+    filteredProducts,
+    getCategory,
+  } = useContext(ProductContext);
 
   const { addToCart, addToWishList } = useContext(CartContext);
 
-  const filteredProducts = productData?.filter((product) => {
-    const searchMatch = searchTerm ? product.productName.toLowerCase().includes(searchTerm.toLowerCase()) : true;
-    const priceMatch = price ? product.productPrice <= price : true;
-    const categoryMatch = category
-      ? category === product.categoryField.category
-      : true;
-    const ratingMatch = rating ? product.rating >= rating : true;
-    return priceMatch && categoryMatch && ratingMatch && searchMatch
-  });
-
-  const SortByProduct = [...filteredProducts].sort((a, b) => {
-    if (sortBy === "LOW_TO_HIGH") {
-      return a.productPrice - b.productPrice;
+  useEffect(() => {
+    if (categoryName) {
+      getCategory(categoryName);
     }
-    if (sortBy === "HIGH_TO_LOW") {
-      return b.productPrice - a.productPrice;
-    }
-    return 0;
-  });
+  }, [categoryName]);
 
-  if (error) <p>{error.message}</p>;
+  const displayProducts =
+    categoryName && categoryData.length > 0 ? categoryData : sortedProducts;
+
+  if (error) {
+    return (
+      <>
+        <Header />
+        <p className="text-center text-danger mt-5">{error.message}</p>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
-      <Header setSearchTerm={setSearchTerm}/>
+      <Header setSearchTerm={setSearchTerm} />
       <main className="container py-5">
         {loading && (
           <>
@@ -55,8 +59,9 @@ const ProductListing = () => {
         )}
 
         <div className="d-flex" style={{ minHeight: "80vh" }}>
+
           <div
-            className="d-flex flex-column bg-secondary-subtle p-3"
+            className="d-flex flex-column align-items-start bg-secondary-subtle p-3"
             style={{ minWidth: "240px", maxHeight: "90vh" }}
           >
             <h4>
@@ -68,30 +73,45 @@ const ProductListing = () => {
                 <h5>Price: </h5>
               </label>
               <br />
-              <input
-                type="radio"
-                name="price"
-                checked={price === 50}
-                onChange={() => setPrice(50)}
-              />{" "}
-              $50 & below
-              <br />
-              <input
-                type="radio"
-                name="price"
-                checked={price === 150}
-                onChange={() => setPrice(150)}
-              />{" "}
-              $150 & below
-              <br />
-              <input
-                type="radio"
-                name="price"
-                checked={price === 200}
-                onChange={() => setPrice(200)}
-              />{" "}
-              $200 & below
-              <br />
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="price"
+                  id="price50"
+                  checked={price === 50}
+                  onChange={() => setPrice(50)}
+                />
+                <label className="form-check-label" htmlFor="price50">
+                  $50 & below
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="price"
+                  id="price150"
+                  checked={price === 150}
+                  onChange={() => setPrice(150)}
+                />
+                <label className="form-check-label" htmlFor="price150">
+                  $150 & below
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="price"
+                  id="price200"
+                  checked={price === 200}
+                  onChange={() => setPrice(200)}
+                />
+                <label className="form-check-label" htmlFor="price200">
+                  $200 & below
+                </label>
+              </div>
             </div>
             <br />
             <div>
@@ -99,24 +119,32 @@ const ProductListing = () => {
                 <h5>Category: </h5>
               </label>
               <br />
-              <input
-                type="checkbox"
-                onChange={(e) => setCategory(e.target.checked ? "Men" : "")}
-                checked={category === "Men"}
-                id=""
-                value="Men"
-              />{" "}
-              Women
-              <br />
-              <input
-                type="checkbox"
-                onChange={(e) => setCategory(e.target.checked ? "Women" : "")}
-                checked={category === "Women"}
-                id=""
-                value="Women"
-              />{" "}
-              Men
-              <br />
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="women"
+                  onChange={(e) => setCategory(e.target.checked ? "Women" : "")}
+                  checked={category === "Women"}
+                  value="Women"
+                />
+                <label className="form-check-label" htmlFor="women">
+                  Women
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="men"
+                  onChange={(e) => setCategory(e.target.checked ? "Men" : "")}
+                  checked={category === "Men"}
+                  value="Men"
+                />
+                <label className="form-check-label" htmlFor="men">
+                  Men
+                </label>
+              </div>
               <br />
             </div>
             <div>
@@ -124,38 +152,58 @@ const ProductListing = () => {
                 <h5>Rating: </h5>
               </label>
               <br />
-              <input
-                type="radio"
-                onChange={() => setRating(4.8)}
-                checked={rating === 4.8}
-                name="rating"
-              />{" "}
-              4.8 Stars & above
-              <br />
-              <input
-                type="radio"
-                onChange={() => setRating(4.6)}
-                checked={rating === 4.6}
-                name="rating"
-              />{" "}
-              4.6 Stars & above
-              <br />
-              <input
-                type="radio"
-                onChange={() => setRating(4.4)}
-                checked={rating === 4.4}
-                name="rating"
-              />{" "}
-              4.4 Stars & above
-              <br />
-              <input
-                type="radio"
-                onChange={() => setRating(4.2)}
-                checked={rating === 4.2}
-                name="rating"
-              />{" "}
-              4.2 Stars & above
-              <br />
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="rating"
+                  id="rating48"
+                  onChange={() => setRating(4.8)}
+                  checked={rating === 4.8}
+                />
+                <label className="form-check-label" htmlFor="rating48">
+                  4.8 Stars & above
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="rating"
+                  id="rating46"
+                  onChange={() => setRating(4.6)}
+                  checked={rating === 4.6}
+                />
+                <label className="form-check-label" htmlFor="rating46">
+                  4.6 Stars & above
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="rating"
+                  id="rating44"
+                  onChange={() => setRating(4.4)}
+                  checked={rating === 4.4}
+                />
+                <label className="form-check-label" htmlFor="rating44">
+                  4.4 Stars & above
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="rating"
+                  id="rating42"
+                  onChange={() => setRating(4.2)}
+                  checked={rating === 4.2}
+                />
+                <label className="form-check-label" htmlFor="rating42">
+                  4.2 Stars & above
+                </label>
+              </div>
             </div>
             <br />
             <div>
@@ -163,22 +211,32 @@ const ProductListing = () => {
                 <h5>Sort By</h5>
               </label>
               <br />
-              <input
-                type="radio"
-                name="sortBy"
-                checked={sortBy === "LOW_TO_HIGH"}
-                onChange={() => setSortBy("LOW_TO_HIGH")}
-              />{" "}
-              Price - Low to High
-              <br />
-              <input
-                type="radio"
-                name="sortBy"
-                checked={sortBy === "HIGH_TO_LOW"}
-                onChange={() => setSortBy("HIGH_TO_LOW")}
-              />{" "}
-              Price - High to Low
-              <br />
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="sortBy"
+                  id="lowToHigh"
+                  checked={sortBy === "LOW_TO_HIGH"}
+                  onChange={() => setSortBy("LOW_TO_HIGH")}
+                />
+                <label className="form-check-label" htmlFor="lowToHigh">
+                  Price - Low to High
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="radio"
+                  name="sortBy"
+                  id="highToLow"
+                  checked={sortBy === "HIGH_TO_LOW"}
+                  onChange={() => setSortBy("HIGH_TO_LOW")}
+                />
+                <label className="form-check-label" htmlFor="highToLow">
+                  Price - High to Low
+                </label>
+              </div>
             </div>
             <button
               className="btn btn-sm btn-outline-dark w-100 mt-4"
@@ -192,6 +250,7 @@ const ProductListing = () => {
               Clear Filters
             </button>
           </div>
+
           <div className="m-4 d-flex flex-column flex-wrap gap-5">
             <div className="mx-4">
               <h5>
@@ -200,7 +259,7 @@ const ProductListing = () => {
               </h5>
             </div>
             <div className="mx-4 d-flex gap-5 flex-wrap">
-              {SortByProduct?.map((product) => (
+              {displayProducts?.map((product) => (
                 <>
                   <div
                     key={product._id}
