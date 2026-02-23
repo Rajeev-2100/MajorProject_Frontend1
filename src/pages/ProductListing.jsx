@@ -62,7 +62,7 @@ const ProductListing = () => {
 
           <div
             className="d-flex flex-column align-items-start bg-secondary-subtle p-3"
-            style={{ minWidth: "240px", maxHeight: "90vh" }}
+            style={{ minWidth: "240px", maxHeight: "100vh" }}
           >
             <h4>
               <b>Filter Products</b>
@@ -143,6 +143,45 @@ const ProductListing = () => {
                 />
                 <label className="form-check-label" htmlFor="men">
                   Men
+                </label>
+              </div>
+               <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="child"
+                  onChange={(e) => setCategory(e.target.checked ? "Child" : "")}
+                  checked={category === "Child"}
+                  value="Child"
+                />
+                <label className="form-check-label" htmlFor="child">
+                  Child
+                </label>
+              </div>
+               <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="men sport"
+                  onChange={(e) => setCategory(e.target.checked ? "Men Sport" : "")}
+                  checked={category === "Men Sport"}
+                  value="Men Sport"
+                />
+                <label className="form-check-label" htmlFor="men sport">
+                  Men Sports
+                </label>
+              </div>
+               <div className="form-check">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  id="women sport"
+                  onChange={(e) => setCategory(e.target.checked ? "Women Sport" : "")}
+                  checked={category === "Women Sport"}
+                  value="Women sport"
+                />
+                <label className="form-check-label" htmlFor="women sport">
+                  Women Sports
                 </label>
               </div>
               <br />

@@ -67,6 +67,12 @@ export const OrderProvider = ({ children }) => {
       );
       const data = await res.json();
 
+      if(res.ok){
+        alert('Order Data is this')
+      }else{
+        alert(`Order Data Id not found`)
+      }
+
       setSelectedOrder(data.order || data);
     } catch (err) {
       console.error(err);

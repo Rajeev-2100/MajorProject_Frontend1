@@ -9,6 +9,7 @@ export const CartProvider = ({ children }) => {
   const [cartLoaded, setCartLoaded] = useState(false);
   const [wishListLoaded, setWishListLoaded] = useState(false);
 
+
   const getAllCartDetail = async () => {
     try {
       if (cartLoaded) return;
@@ -40,6 +41,12 @@ export const CartProvider = ({ children }) => {
           }),
         },
       );
+
+      if (res.ok) {
+        alert(`${product.productName} added to cart successfully!`);
+      }else {
+        alert('Something went wrong in cart Data')
+      }
 
       const data = await res.json();
       const newCartItem = data?.data;
@@ -74,7 +81,7 @@ export const CartProvider = ({ children }) => {
 
   const removeFromCart = async (cartId) => {
     try {
-      await fetch(
+      const res = await fetch(
         `https://major-project-backend1.vercel.app/api/deletedCart/${cartId}`,
         {
           method: "DELETE",
@@ -82,6 +89,13 @@ export const CartProvider = ({ children }) => {
       );
 
       setCart((prev) => prev.filter((item) => item._id !== cartId));
+
+      if (res.ok) {
+        alert(`Cart Id deleted Successfully!`);
+      }else {
+        alert('This Cart Id not found')
+      }
+
     } catch (error) {
       console.error(error);
     }
@@ -179,6 +193,12 @@ export const CartProvider = ({ children }) => {
 
       const newItem = data?.data;
 
+      if (res.ok) {
+        alert(`${product.productName} added to wishlist successfully!`);
+      }else {
+        alert('Something went wrong in wishlist Data')
+      }
+
       setWishList((prev) => {
         const exists = prev.find((item) => item.product._id === product._id);
 
@@ -205,7 +225,14 @@ export const CartProvider = ({ children }) => {
           method: "DELETE",
         },
       );
-      const data = res.json() 
+      const data = res.json();
+
+      if (res.ok) {
+        alert(`This wishlist Id remove successfully!`);
+      }else {
+        alert('Something went wrong in wishlist Data')
+      }
+
       setWishList((prev) => prev.filter((item) => item._id !== wishlistId));
     } catch (error) {
       console.error(error);
