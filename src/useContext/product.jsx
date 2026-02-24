@@ -45,7 +45,7 @@ export const ProductProvider = ({ children }) => {
   async function getCategory(categoryName) {
     try {
       const res = await fetch(
-        `https://major-project-backend1.vercel.app/api/category/${categoryName}`,
+        `https://major-project-backend1.vercel.app/api/category/${encodeURIComponent(categoryName)}`,
       );
       const data = await res.json();
       console.log("Category API response:", data);
