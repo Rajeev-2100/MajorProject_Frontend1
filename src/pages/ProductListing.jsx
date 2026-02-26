@@ -23,7 +23,6 @@ const ProductListing = () => {
   } = useContext(ProductContext);
 
   const { addToCart, addToWishList } = useContext(CartContext);
-  // console.log('CategoryName: ', categoryName)
 
   const finalProducts = categoryName
     ? sortedProducts.filter(
@@ -41,14 +40,26 @@ const ProductListing = () => {
     );
   }
 
-  const handleCategoryChange = (event) => {
-    const checked = event.target.checked
-    const value = event.target.value
+  const removeCategory = (cateRemove) => {
+    setCategories(categories.filter((cate) => cate !== cateRemove));
+  };
 
-    if(checked){
-      setCategories([...categories, value])
-    }else{
-      setCategories(categories.filter((item) => item !== value))
+  const removePrice = () => {
+    setPrice("");
+  };
+
+  const removeRating = () => {
+    setRating(0);
+  };
+
+  const handleCategoryChange = (event) => {
+    const checked = event.target.checked;
+    const value = event.target.value;
+
+    if (checked) {
+      setCategories([...categories, value]);
+    } else {
+      setCategories(categories.filter((item) => item !== value));
     }
   };
 
@@ -130,6 +141,7 @@ const ProductListing = () => {
                   type="checkbox"
                   id="women"
                   onChange={handleCategoryChange}
+                  checked={categories.includes("Women")}
                   value="Women"
                 />
                 <label className="form-check-label" htmlFor="women">
@@ -143,6 +155,7 @@ const ProductListing = () => {
                   id="men"
                   onChange={handleCategoryChange}
                   value="Men"
+                  checked={categories.includes("Men")}
                 />
                 <label className="form-check-label" htmlFor="men">
                   Men
@@ -155,6 +168,7 @@ const ProductListing = () => {
                   id="child"
                   onChange={handleCategoryChange}
                   value="Child"
+                  checked={categories.includes("Child")}
                 />
                 <label className="form-check-label" htmlFor="child">
                   Child
@@ -167,6 +181,7 @@ const ProductListing = () => {
                   id="men sport"
                   onChange={handleCategoryChange}
                   value="Men Sport"
+                  checked={categories.includes("Men Sport")}
                 />
                 <label className="form-check-label" htmlFor="men sport">
                   Men Sports
@@ -179,6 +194,7 @@ const ProductListing = () => {
                   id="women sport"
                   onChange={handleCategoryChange}
                   value="Women Sport"
+                  checked={categories.includes("Women Sport")}
                 />
                 <label className="form-check-label" htmlFor="women sport">
                   Women Sports
@@ -197,8 +213,8 @@ const ProductListing = () => {
                   type="radio"
                   name="rating"
                   id="rating48"
-                  onChange={() => setRating(4.8)}
                   checked={rating === 4.8}
+                  onChange={() => setRating(4.8)}
                 />
                 <label className="form-check-label" htmlFor="rating48">
                   4.8 Stars & above
@@ -210,8 +226,8 @@ const ProductListing = () => {
                   type="radio"
                   name="rating"
                   id="rating46"
-                  onChange={() => setRating(4.6)}
                   checked={rating === 4.6}
+                  onChange={() => setRating(4.6)}
                 />
                 <label className="form-check-label" htmlFor="rating46">
                   4.6 Stars & above
@@ -223,8 +239,8 @@ const ProductListing = () => {
                   type="radio"
                   name="rating"
                   id="rating44"
-                  onChange={() => setRating(4.4)}
                   checked={rating === 4.4}
+                  onChange={() => setRating(4.4)}
                 />
                 <label className="form-check-label" htmlFor="rating44">
                   4.4 Stars & above
@@ -236,8 +252,8 @@ const ProductListing = () => {
                   type="radio"
                   name="rating"
                   id="rating42"
-                  onChange={() => setRating(4.2)}
                   checked={rating === 4.2}
+                  onChange={() => setRating(4.2)}
                 />
                 <label className="form-check-label" htmlFor="rating42">
                   4.2 Stars & above
@@ -269,7 +285,7 @@ const ProductListing = () => {
                   type="radio"
                   name="sortBy"
                   id="highToLow"
-                  checked={sortBy === "HIGH_TO_LOW"}
+                  checked={sortBy === "HIGH_TO_LOW"}  
                   onChange={() => setSortBy("HIGH_TO_LOW")}
                 />
                 <label className="form-check-label" htmlFor="highToLow">
@@ -281,7 +297,7 @@ const ProductListing = () => {
               className="btn btn-sm btn-outline-dark w-100 mt-4"
               onClick={() => {
                 setPrice("");
-                setCategory("");
+                setCategories([]);
                 setRating(0);
                 setSortBy("");
               }}
@@ -292,6 +308,41 @@ const ProductListing = () => {
 
           <div className="m-4 d-flex flex-column flex-wrap gap-5">
             <div className="mx-4">
+              <div className=" mb-3">
+                <h4>
+                  <strong>Active Filters:</strong>
+                </h4>
+                {categories.map((cat) => (
+                  <span
+                    key={cat}
+                    className="badge bg-dark mx-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => removeCategory(cat)}
+                  >
+                    {cat} ✖
+                  </span>
+                ))}
+
+                {price && (
+                  <span
+                    className="badge bg-dark mx-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={removePrice}
+                  >
+                    ${price} & below ✖
+                  </span>
+                )}
+
+                {rating > 0 && (
+                  <span
+                    className="badge bg-dark mx-1"
+                    style={{ cursor: "pointer" }}
+                    onClick={removeRating}
+                  >
+                    {rating}+ Stars ✖
+                  </span>
+                )}
+              </div>
               <h5>
                 Show All Products (Showing {finalProducts?.length || 0}{" "}
                 products)
