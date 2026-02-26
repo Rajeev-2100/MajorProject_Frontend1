@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import Footer from "../components/Footer.jsx";
 import Header from "../components/Header.jsx";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import CartContext from "../useContext/Cart.jsx";
 import ProductContext from "../useContext/product.jsx";
 
@@ -10,8 +10,8 @@ const ProductListing = () => {
   const {
     setSearchTerm,
     price,
-    category,
-    setCategory,
+    categories,
+    setCategories,
     setRating,
     setPrice,
     setSortBy,
@@ -20,21 +20,16 @@ const ProductListing = () => {
     loading,
     error,
     sortedProducts,
-    categoryData,
-    filteredProducts,
-    getCategory,
   } = useContext(ProductContext);
 
   const { addToCart, addToWishList } = useContext(CartContext);
+  // console.log('CategoryName: ', categoryName)
 
-  useEffect(() => {
-    if (categoryName) {
-      getCategory(categoryName);
-    }
-  }, [categoryName]);
-
-  const displayProducts =
-    categoryName && categoryData.length > 0 ? categoryData : sortedProducts;
+  const finalProducts = categoryName
+    ? sortedProducts.filter(
+        (product) => product.categoryField?.categoryField === categoryName,
+      )
+    : sortedProducts;
 
   if (error) {
     return (
@@ -45,6 +40,17 @@ const ProductListing = () => {
       </>
     );
   }
+
+  const handleCategoryChange = (event) => {
+    const checked = event.target.checked
+    const value = event.target.value
+
+    if(checked){
+      setCategories([...categories, value])
+    }else{
+      setCategories(categories.filter((item) => item !== value))
+    }
+  };
 
   return (
     <>
@@ -59,7 +65,6 @@ const ProductListing = () => {
         )}
 
         <div className="d-flex" style={{ minHeight: "80vh" }}>
-
           <div
             className="d-flex flex-column align-items-start bg-secondary-subtle p-3"
             style={{ minWidth: "240px", maxHeight: "100vh" }}
@@ -124,8 +129,7 @@ const ProductListing = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="women"
-                  onChange={(e) => setCategory(e.target.checked ? "Women" : "")}
-                  checked={category === "Women"}
+                  onChange={handleCategoryChange}
                   value="Women"
                 />
                 <label className="form-check-label" htmlFor="women">
@@ -137,48 +141,44 @@ const ProductListing = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="men"
-                  onChange={(e) => setCategory(e.target.checked ? "Men" : "")}
-                  checked={category === "Men"}
+                  onChange={handleCategoryChange}
                   value="Men"
                 />
                 <label className="form-check-label" htmlFor="men">
                   Men
                 </label>
               </div>
-               <div className="form-check">
+              <div className="form-check">
                 <input
                   className="form-check-input"
                   type="checkbox"
                   id="child"
-                  onChange={(e) => setCategory(e.target.checked ? "Child" : "")}
-                  checked={category === "Child"}
+                  onChange={handleCategoryChange}
                   value="Child"
                 />
                 <label className="form-check-label" htmlFor="child">
                   Child
                 </label>
               </div>
-               <div className="form-check">
+              <div className="form-check">
                 <input
                   className="form-check-input"
                   type="checkbox"
                   id="men sport"
-                  onChange={(e) => setCategory(e.target.checked ? "Men Sport" : "")}
-                  checked={category === "Men Sport"}
+                  onChange={handleCategoryChange}
                   value="Men Sport"
                 />
                 <label className="form-check-label" htmlFor="men sport">
                   Men Sports
                 </label>
               </div>
-               <div className="form-check">
+              <div className="form-check">
                 <input
                   className="form-check-input"
                   type="checkbox"
                   id="women sport"
-                  onChange={(e) => setCategory(e.target.checked ? "Women Sport" : "")}
-                  checked={category === "Women Sport"}
-                  value="Women sport"
+                  onChange={handleCategoryChange}
+                  value="Women Sport"
                 />
                 <label className="form-check-label" htmlFor="women sport">
                   Women Sports
@@ -293,12 +293,12 @@ const ProductListing = () => {
           <div className="m-4 d-flex flex-column flex-wrap gap-5">
             <div className="mx-4">
               <h5>
-                Show All Products (Showing {filteredProducts?.length || 0}{" "}
+                Show All Products (Showing {finalProducts?.length || 0}{" "}
                 products)
               </h5>
             </div>
             <div className="mx-4 d-flex gap-5 flex-wrap">
-              {displayProducts?.map((product) => (
+              {finalProducts?.map((product) => (
                 <>
                   <div
                     key={product._id}

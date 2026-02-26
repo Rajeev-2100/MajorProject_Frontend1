@@ -6,11 +6,12 @@ const ProductContext = createContext();
 export const ProductProvider = ({ children }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("");
+  const [categories, setCategories] = useState([])
   const [rating, setRating] = useState(0);
   const [sortBy, setSortBy] = useState("");
   const [categoryData, setCategoryData] = useState([]);
   // console.log("Search Term: ", searchTerm);
+  console.log('Categories: ', categories)
 
   const url = `https://major-project-backend1.vercel.app/api/products`;
 
@@ -23,7 +24,7 @@ export const ProductProvider = ({ children }) => {
 
     const priceMatch = !price || product.productPrice <= price
 
-    const categoryMatch = !category || product.categoryField?.categoryField === category
+    const categoryMatch = categories.length === 0 || categories.includes(product?.categoryField?.categoryField)
 
     const ratingMatch = !rating || product.rating >= rating
 
@@ -61,7 +62,8 @@ export const ProductProvider = ({ children }) => {
       value={{
         setSearchTerm,
         setPrice,
-        setCategory,
+        setCategories,
+        categories,
         setRating,
         setSortBy,
         loading,
