@@ -1,11 +1,12 @@
 import { Link, useParams } from "react-router-dom";
 import Footer from "../components/Footer.jsx";
 import Header from "../components/Header.jsx";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import CartContext from "../useContext/Cart.jsx";
 import ProductContext from "../useContext/product.jsx";
 
 const ProductListing = () => {
+  const [goToCart, setGoToCart] = useState(false);
   const { categoryName } = useParams();
   const {
     setSearchTerm,
@@ -50,6 +51,11 @@ const ProductListing = () => {
 
   const removeRating = () => {
     setRating(0);
+  };
+
+  const hasActiveFilters = () => {
+    // setActiveFilter(true);
+    return price !== "" || categories.length > 0 || rating > 0 || sortBy !== "";
   };
 
   const handleCategoryChange = (event) => {
@@ -285,7 +291,7 @@ const ProductListing = () => {
                   type="radio"
                   name="sortBy"
                   id="highToLow"
-                  checked={sortBy === "HIGH_TO_LOW"}  
+                  checked={sortBy === "HIGH_TO_LOW"}
                   onChange={() => setSortBy("HIGH_TO_LOW")}
                 />
                 <label className="form-check-label" htmlFor="highToLow">
@@ -308,41 +314,45 @@ const ProductListing = () => {
 
           <div className="m-4 d-flex flex-column flex-wrap gap-5">
             <div className="mx-4">
-              <div className=" mb-3">
-                <h4>
-                  <strong>Active Filters:</strong>
-                </h4>
-                {categories.map((cat) => (
-                  <span
-                    key={cat}
-                    className="badge bg-dark mx-1"
-                    style={{ cursor: "pointer" }}
-                    onClick={() => removeCategory(cat)}
-                  >
-                    {cat} ✖
-                  </span>
-                ))}
+              {hasActiveFilters() && (
+                <div className="mb-3">
+                  <h4>
+                    <strong>Active Filters:</strong>
+                  </h4>
 
-                {price && (
-                  <span
-                    className="badge bg-dark mx-1"
-                    style={{ cursor: "pointer" }}
-                    onClick={removePrice}
-                  >
-                    ${price} & below ✖
-                  </span>
-                )}
+                  {categories.map((cat) => (
+                    <span
+                      key={cat}
+                      className="badge bg-dark mx-1"
+                      style={{ cursor: "pointer" }}
+                      onClick={() => removeCategory(cat)}
+                    >
+                      {cat} ✖
+                    </span>
+                  ))}
 
-                {rating > 0 && (
-                  <span
-                    className="badge bg-dark mx-1"
-                    style={{ cursor: "pointer" }}
-                    onClick={removeRating}
-                  >
-                    {rating}+ Stars ✖
-                  </span>
-                )}
-              </div>
+                  {price !== "" && (
+                    <span
+                      className="badge bg-dark mx-1"
+                      style={{ cursor: "pointer" }}
+                      onClick={removePrice}
+                    >
+                      ${price} & below ✖
+                    </span>
+                  )}
+
+                  {rating > 0 && (
+                    <span
+                      className="badge bg-dark mx-1"
+                      style={{ cursor: "pointer" }}
+                      onClick={removeRating}
+                    >
+                      {rating}+ ✖
+                    </span>
+                  )}
+                </div>
+              )}
+
               <h5>
                 Show All Products (Showing {finalProducts?.length || 0}{" "}
                 products)
@@ -375,10 +385,13 @@ const ProductListing = () => {
                       <h6>${product.productPrice}</h6>
                       <Link
                         to={`/cart`}
-                        onClick={() => addToCart(product)}
+                        onClick={() => {
+                          addToCart(product);
+                          setGoToCart(true);
+                        }}
                         className="btn btn-primary px-5 mx-3 mb-4"
                       >
-                        Go to Cart
+                        {goToCart ? "Go To Cart" : "Add To Cart"}
                       </Link>
                       <Link
                         to={`/productPage/${product._id}`}
