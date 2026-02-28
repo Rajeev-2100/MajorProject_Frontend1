@@ -6,7 +6,8 @@ import CartContext from "../useContext/Cart.jsx";
 import ProductContext from "../useContext/product.jsx";
 
 const ProductListing = () => {
-  const [goToCart, setGoToCart] = useState(false);
+  const [addedProductId, setAddedProductId] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(false)
   const { categoryName } = useParams();
   const {
     setSearchTerm,
@@ -24,12 +25,9 @@ const ProductListing = () => {
   } = useContext(ProductContext);
 
   const { addToCart, addToWishList } = useContext(CartContext);
+  // console.log('Selected Size: ',selectedSize)
 
-  const finalProducts = categoryName
-    ? sortedProducts.filter(
-        (product) => product.categoryField?.categoryField === categoryName,
-      )
-    : sortedProducts;
+  const finalProducts = categoryName ? sortedProducts.filter((product) => product.categoryField?.categoryField === categoryName) : sortedProducts;
 
   if (error) {
     return (
@@ -54,8 +52,7 @@ const ProductListing = () => {
   };
 
   const hasActiveFilters = () => {
-    // setActiveFilter(true);
-    return price !== "" || categories.length > 0 || rating > 0 || sortBy !== "";
+    return price !== "" || categories.length > 0 || rating > 0
   };
 
   const handleCategoryChange = (event) => {
@@ -360,6 +357,7 @@ const ProductListing = () => {
             </div>
             <div className="mx-4 d-flex gap-5 flex-wrap">
               {finalProducts?.map((product) => (
+                // console.log(product),
                 <>
                   <div
                     key={product._id}
@@ -376,26 +374,40 @@ const ProductListing = () => {
                       ></i>
                       <img
                         src={product.productImage}
-                        className="img-fluid card-img h-100 object-fit-cover card-img-top"
+                        className="img-fluid card-img h-90 object-fit-cover card-img-top"
                         alt="..."
                       />
                     </div>
-                    <div className="card-body text-center">
+
+                    <div className="d-flex justify-content-center align-items-center flex-column gap-1">
                       <h5 className="card-text">{product.productName}</h5>
                       <h6>${product.productPrice}</h6>
+                      <select name="" id="" className="mb-2" onChange={(e) => setSelectedSize(e.target.value)}>
+                        <option value="">Select Size</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                      </select>
+
                       <Link
                         to={`/cart`}
-                        onClick={() => {
-                          addToCart(product);
-                          setGoToCart(true);
+                        onClick={(e) => {
+                          e.preventDefault()
+                          addToCart(product, selectedSize);
+                          setSelectedSize(false)
+                          setAddedProductId(product._id);
                         }}
-                        className="btn btn-primary px-5 mx-3 mb-4"
+                        className="btn btn-primary px-5 mx-3 mb-2"
                       >
-                        {goToCart ? "Go To Cart" : "Add To Cart"}
+                        {addedProductId === product._id && selectedSize === "" 
+                          ? "Go To Cart"
+                          : "Add To Cart"}
                       </Link>
                       <Link
                         to={`/productPage/${product._id}`}
-                        className="px-5 mx-3 btn btn-primary"
+                        className="px-5 mx-3 mb-3 btn btn-primary"
                       >
                         More Detail
                       </Link>

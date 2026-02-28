@@ -23,9 +23,9 @@ const Cart = () => {
     (acc, curr) => acc + curr.product.productPrice * curr.productQuantity,
     0,
   );
-  console.log(totalPrice);
+  // console.log(totalPrice);
 
-  // console.log("Cart Data: ", cart);
+  console.log("Cart Data: ", cart);
 
   return (
     <>
@@ -40,7 +40,7 @@ const Cart = () => {
             <div className="col-md-8">
               {cart.map(
                 (item) => (
-                  // console.log(item),
+                  console.log(item),
                   (
                     <div key={item._id} className="card mb-4">
                       <div className="row g-0">
@@ -60,6 +60,7 @@ const Cart = () => {
                               Discount: {item.product.discountPrice}%
                             </small>
 
+                            <p>Selected Size: {item.productSize}</p>
                             <div className="d-flex align-items-center gap-3 mt-3">
                               <i
                                 className="bi bi-dash-circle-fill"

@@ -9,7 +9,6 @@ export const CartProvider = ({ children }) => {
   const [cartLoaded, setCartLoaded] = useState(false);
   const [wishListLoaded, setWishListLoaded] = useState(false);
 
-
   const getAllCartDetail = async () => {
     try {
       if (cartLoaded) return;
@@ -27,7 +26,12 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const addToCart = async (product) => {
+  const addToCart = async (product, selectedSize) => {
+    if (!selectedSize) {
+      alert("Please select the size");
+      return;
+    }
+
     try {
       const res = await fetch(
         `https://major-project-backend1.vercel.app/api/cart/${product._id}`,
@@ -38,25 +42,32 @@ export const CartProvider = ({ children }) => {
           },
           body: JSON.stringify({
             productQuantity: 1,
+            productSize: selectedSize,
           }),
         },
       );
 
-      if (res.ok) {
-        alert(`${product.productName} added to cart successfully!`);
-      }else {
-        alert('Something went wrong in cart Data')
-      }
-
       const data = await res.json();
       const newCartItem = data?.data;
 
+      if (!res.ok) {
+        alert("Something went wrong");
+        return;
+      }else{ 
+        alert(`${product.productName} added to cart successfully!`);
+      }
+
       setCart((prev) => {
-        const existing = prev.find((item) => item.product._id === product._id);
+        const existing = prev.find(
+          (item) =>
+            item.product._id === product._id &&
+            item.productSize === selectedSize,
+        );
 
         if (existing) {
           return prev.map((item) =>
-            item.product._id === product._id
+            item.product._id === product._id &&
+            item.productSize === selectedSize
               ? {
                   ...item,
                   productQuantity: item.productQuantity + 1,
@@ -71,6 +82,7 @@ export const CartProvider = ({ children }) => {
             _id: newCartItem._id,
             product,
             productQuantity: 1,
+            productSize: selectedSize,
           },
         ];
       });
@@ -92,10 +104,9 @@ export const CartProvider = ({ children }) => {
 
       if (res.ok) {
         alert(`Cart Id deleted Successfully!`);
-      }else {
-        alert('This Cart Id not found')
+      } else {
+        alert("This Cart Id not found");
       }
-
     } catch (error) {
       console.error(error);
     }
@@ -195,8 +206,8 @@ export const CartProvider = ({ children }) => {
 
       if (res.ok) {
         alert(`${product.productName} added to wishlist successfully!`);
-      }else {
-        alert('Something went wrong in wishlist Data')
+      } else {
+        alert("Something went wrong in wishlist Data");
       }
 
       setWishList((prev) => {
@@ -229,8 +240,8 @@ export const CartProvider = ({ children }) => {
 
       if (res.ok) {
         alert(`This wishlist Id remove successfully!`);
-      }else {
-        alert('Something went wrong in wishlist Data')
+      } else {
+        alert("Something went wrong in wishlist Data");
       }
 
       setWishList((prev) => prev.filter((item) => item._id !== wishlistId));
