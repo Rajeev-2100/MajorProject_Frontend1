@@ -13,6 +13,7 @@ import Order from "./pages/Order.jsx";
 import OrderDetails from "./pages/OrderDetail.jsx";
 import { OrderProvider } from "./useContext/Order.jsx";
 import { ProductProvider } from "./useContext/product.jsx";
+import CategoryPage from "./pages/CategoryPage.jsx";
 
 createRoot(document.getElementById("root")).render(
   <Router>
@@ -24,7 +25,7 @@ createRoot(document.getElementById("root")).render(
               <Route path="/" element={<App />} />
               <Route path="/productPage" element={<ProductListing />} />
               <Route path="/productPage/:productId" element={<ProductDetail />} />
-              <Route path="/category/:categoryName" element={<ProductListing />}/>
+              <Route path="/category/:categoryName" element={<CategoryPage />}/>
               <Route path="/cart" element={<Cart />} />
               <Route path="/wishList" element={<WishListPage />} />
               <Route path="/userProfile" element={<UserProfile />} />

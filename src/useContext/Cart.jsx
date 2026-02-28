@@ -26,12 +26,7 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const addToCart = async (product, selectedSize) => {
-    if (!selectedSize) {
-      alert("Please select the size");
-      return;
-    }
-
+  const addToCart = async (product, selectedSize = "") => {
     try {
       const res = await fetch(
         `https://major-project-backend1.vercel.app/api/cart/${product._id}`,
@@ -51,11 +46,12 @@ export const CartProvider = ({ children }) => {
       const newCartItem = data?.data;
 
       if (!res.ok) {
-        alert("Something went wrong");
+        alert("Please select the size");
         return;
-      }else{ 
+      }else{
         alert(`${product.productName} added to cart successfully!`);
       }
+
 
       setCart((prev) => {
         const existing = prev.find(
@@ -87,7 +83,7 @@ export const CartProvider = ({ children }) => {
         ];
       });
     } catch (error) {
-      console.error(error);
+      throw error;
     }
   };
 

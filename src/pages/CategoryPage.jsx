@@ -1,7 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
-import { useContext, useEffect } from "react";
+import { useContext, useState, useEffect } from "react";
 import ProductContext from "../useContext/product";
 import CartContext from "../useContext/Cart";
 
@@ -9,7 +9,11 @@ const CategoryPage = () => {
   const { categoryName } = useParams();
 
   const { getCategory, categoryData } = useContext(ProductContext);
-  const { addToCart } = useContext(CartContext)
+  const { addToCart } = useContext(CartContext);
+
+  const [selectedSizes, setSelectedSizes] = useState({});
+
+  const [addedProductId, setAddedProductId] = useState(null);
 
   useEffect(() => {
     if (categoryName) {
@@ -44,13 +48,57 @@ const CategoryPage = () => {
                       <p className="card-text fw-bold">
                         ₹{product.productPrice}
                       </p>
-                      <Link
-                        to={`/cart`}
-                        onClick={() => addToCart(product)}
-                        className="btn btn-primary"
+
+                      <select
+                        value={selectedSizes[product._id] || ""}
+                        className="form-select mb-3"
+                        onChange={(e) =>
+                          setSelectedSizes((prev) => ({
+                            ...prev,
+                            [product._id]: e.target.value,
+                          }))
+                        }
                       >
-                        Go To Cart
-                      </Link>
+                        <option value="">Select Size</option>
+                        <option value="S">S</option>
+                        <option value="M">M</option>
+                        <option value="L">L</option>
+                        <option value="XL">XL</option>
+                        <option value="XXL">XXL</option>
+                      </select>
+
+                      <div className="d-flex gap-3">
+                        <button
+                          className="btn btn-primary"
+                          onClick={() => {
+                            const size = selectedSizes[product._id];
+
+                            if (!size) {
+                              alert("Please select the size");
+                              return;
+                            }
+
+                            addToCart(product, size);
+                            setAddedProductId(product._id);
+
+                            setSelectedSizes((prev) => ({
+                              ...prev,
+                              [product._id]: "",
+                            }));
+                          }}
+                        >
+                          {addedProductId === product._id
+                            ? "Go To Cart"
+                            : "Add To Cart"}
+                        </button>
+
+                        <Link
+                          to={`/productPage/${product._id}`}
+                          className="btn btn-outline-primary"
+                        >
+                          More Detail
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -59,6 +107,7 @@ const CategoryPage = () => {
           </div>
         </div>
       </main>
+
       <Footer />
     </>
   );
