@@ -382,7 +382,7 @@ const ProductListing = () => {
                     <div className="d-flex justify-content-center align-items-center flex-column gap-1">
                       <h5 className="card-text">{product.productName}</h5>
                       <h6>${product.productPrice}</h6>
-                      <select name="" id="" className="mb-2" onChange={(e) => setSelectedSize(e.target.value)}>
+                      <select name="" id="" className="form-select mb-3" onChange={(e) => setSelectedSize(e.target.value)}>
                         <option value="">Select Size</option>
                         <option value="S">S</option>
                         <option value="M">M</option>
