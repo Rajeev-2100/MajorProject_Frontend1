@@ -5,8 +5,15 @@ import ProductContext from "../useContext/product";
 
 const Header = () => {
   const [search, setSearch] = useState("");
-  const { setSearchTerm } = useContext(ProductContext)
-  const { cart, wishList, cartLoaded, wishListLoaded, getAllCartDetail, getAllWishListDetail } = useContext(CartContext);
+  const { setSearchTerm } = useContext(ProductContext);
+  const {
+    cart,
+    wishList,
+    cartLoaded,
+    wishListLoaded,
+    getAllCartDetail,
+    getAllWishListDetail,
+  } = useContext(CartContext);
 
   if (!cartLoaded) {
     getAllCartDetail();
@@ -15,7 +22,6 @@ const Header = () => {
   if (!wishListLoaded) {
     getAllWishListDetail();
   }
-
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -55,8 +61,15 @@ const Header = () => {
               <i className="bi bi-person fs-4 text-dark"></i>
             </Link>
 
-            <Link to={`/wishList`} className="text-decoration-none text-dark d-flex align-items-center">
-              <i className="bi bi-heart fs-4 text-danger"></i>
+            <Link
+              to={`/wishList`}
+              className="text-decoration-none text-dark d-flex align-items-center"
+            >
+              <i
+                className={`bi bi-heart fs-4 ${
+                  wishList.length > 0 ? "text-danger" : "text-dark"
+                }`}
+              ></i>
               ({wishList.length})
             </Link>
 
@@ -65,8 +78,7 @@ const Header = () => {
               className="text-decoration-none text-dark d-flex align-items-center gap-1"
             >
               <i className="bi bi-cart fs-4"></i>
-              <span className="d-lg-inline d-none">Cart</span>
-              ({cart.length})
+              <span className="d-lg-inline d-none">Cart</span>({cart.length})
             </Link>
           </div>
         </div>
