@@ -1,5 +1,6 @@
 import { createContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const OrderContext = createContext();
 
@@ -68,9 +69,9 @@ export const OrderProvider = ({ children }) => {
       const data = await res.json();
 
       if(res.ok){
-        alert('Order Data is this')
+        toast('Order Data is this')
       }else{
-        alert(`Order Data Id not found`)
+        toast(`Order Data Id not found`)
       }
 
       setSelectedOrder(data.order || data);

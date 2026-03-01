@@ -1,4 +1,5 @@
 import { createContext, useState } from "react";
+import { toast } from "react-toastify";
 
 const CartContext = createContext();
 
@@ -46,10 +47,10 @@ export const CartProvider = ({ children }) => {
       const newCartItem = data?.data;
 
       if (!res.ok) {
-        alert("Please select the size");
+        toast("Please select the size");
         return;
       }else{
-        alert(`${product.productName} added to cart successfully!`);
+        toast(`${product.productName} added to cart successfully!`);
       }
 
 
@@ -99,9 +100,9 @@ export const CartProvider = ({ children }) => {
       setCart((prev) => prev.filter((item) => item._id !== cartId));
 
       if (res.ok) {
-        alert(`Cart Id deleted Successfully!`);
+        toast(`Cart Id deleted Successfully!`);
       } else {
-        alert("This Cart Id not found");
+        toast("This Cart Id not found");
       }
     } catch (error) {
       console.error(error);
@@ -201,9 +202,9 @@ export const CartProvider = ({ children }) => {
       const newItem = data?.data;
 
       if (res.ok) {
-        alert(`${product.productName} added to wishlist successfully!`);
+        toast(`${product.productName} added to wishlist successfully!`);
       } else {
-        alert("Something went wrong in wishlist Data");
+        toast("Something went wrong in wishlist Data");
       }
 
       setWishList((prev) => {
@@ -235,9 +236,9 @@ export const CartProvider = ({ children }) => {
       const data = res.json();
 
       if (res.ok) {
-        alert(`This wishlist Id remove successfully!`);
+        toast(`This wishlist Id remove successfully!`);
       } else {
-        alert("Something went wrong in wishlist Data");
+        toast("Something went wrong in wishlist Data");
       }
 
       setWishList((prev) => prev.filter((item) => item._id !== wishlistId));

@@ -4,6 +4,7 @@ import Header from "../components/Header.jsx";
 import { useContext, useState } from "react";
 import CartContext from "../useContext/Cart.jsx";
 import ProductContext from "../useContext/product.jsx";
+import { toast } from "react-toastify";
 
 const ProductListing = () => {
   const [addedProductId, setAddedProductId] = useState(null);
@@ -397,7 +398,7 @@ const ProductListing = () => {
 
                           if(!selectedSize){
                             e.preventDefault()
-                            alert('Please Selected the size')
+                            toast('Please Selected the size')
                           }
 
                           e.preventDefault()
@@ -407,7 +408,7 @@ const ProductListing = () => {
                         }}
                         className="btn btn-primary px-5 mx-3 mb-2"
                       >
-                        {addedProductId === product._id
+                        {addedProductId === product._id && selectedSize
                           ? "Go To Cart"
                           : "Add To Cart"}
                       </Link>

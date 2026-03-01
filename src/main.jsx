@@ -14,9 +14,12 @@ import OrderDetails from "./pages/OrderDetail.jsx";
 import { OrderProvider } from "./useContext/Order.jsx";
 import { ProductProvider } from "./useContext/product.jsx";
 import CategoryPage from "./pages/CategoryPage.jsx";
+import { ToastContainer } from "react-toastify";
+
 
 createRoot(document.getElementById("root")).render(
   <Router>
+  <ToastContainer/>
     <ProductProvider>
       <UserProvider>
         <CartProvider>

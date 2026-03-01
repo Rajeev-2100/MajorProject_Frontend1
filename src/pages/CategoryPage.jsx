@@ -4,6 +4,7 @@ import Header from "../components/Header";
 import { useContext, useState, useEffect } from "react";
 import ProductContext from "../useContext/product";
 import CartContext from "../useContext/Cart";
+import { toast } from "react-toastify";
 
 const CategoryPage = () => {
   const { categoryName } = useParams();
@@ -74,7 +75,7 @@ const CategoryPage = () => {
                             const size = selectedSizes[product._id];
 
                             if (!size) {
-                              alert("Please select the size");
+                              toast("Please select the size");
                               return;
                             }
 
