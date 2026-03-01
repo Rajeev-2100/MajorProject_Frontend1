@@ -392,8 +392,14 @@ const ProductListing = () => {
                       </select>
 
                       <Link
-                        to={`/cart`}
+                        to={addedProductId === product._id ? "/cart" : "#"}
                         onClick={(e) => {
+
+                          if(!selectedSize){
+                            e.preventDefault()
+                            alert('Please Selected the size')
+                          }
+
                           e.preventDefault()
                           addToCart(product, selectedSize);
                           setSelectedSize(false)
@@ -401,7 +407,7 @@ const ProductListing = () => {
                         }}
                         className="btn btn-primary px-5 mx-3 mb-2"
                       >
-                        {addedProductId === product._id && selectedSize === "" 
+                        {addedProductId === product._id
                           ? "Go To Cart"
                           : "Add To Cart"}
                       </Link>
