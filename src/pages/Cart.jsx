@@ -114,14 +114,14 @@ const Cart = () => {
 
             <div className="col-md-4">
               <div className="card p-4 sticky-top" style={{ top: "80px" }}>
-                <h5>PRICE DETAILS</h5>
+                <h4><b>PRICE DETAILS</b></h4>
                 <hr />
                 <p>Total Items: {cart.length}</p>
                 <p>Total Price: ${totalPrice.toFixed(2)}</p>
                 <hr />
-                <h4>
+                <h5>
                   <b>Total Amount:</b> ${totalPrice.toFixed(2)}
-                </h4>
+                </h5>
                 <Link to="/checkOut" className="btn btn-primary mt-3">
                   PLACE ORDER
                 </Link>
