@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 
 const ProductListing = () => {
   const [addedProductId, setAddedProductId] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(false)
+  const [selectedSize, setSelectedSize] = useState({});
   const { categoryName } = useParams();
   const {
     setSearchTerm,
@@ -28,7 +28,11 @@ const ProductListing = () => {
   const { addToCart, addToWishList } = useContext(CartContext);
   // console.log('Selected Size: ',selectedSize)
 
-  const finalProducts = categoryName ? sortedProducts.filter((product) => product.categoryField?.categoryField === categoryName) : sortedProducts;
+  const finalProducts = categoryName
+    ? sortedProducts.filter(
+        (product) => product.categoryField?.categoryField === categoryName,
+      )
+    : sortedProducts;
 
   if (error) {
     return (
@@ -53,7 +57,7 @@ const ProductListing = () => {
   };
 
   const hasActiveFilters = () => {
-    return price !== "" || categories.length > 0 || rating > 0
+    return price !== "" || categories.length > 0 || rating > 0;
   };
 
   const handleCategoryChange = (event) => {
@@ -371,7 +375,15 @@ const ProductListing = () => {
                     >
                       <i
                         className="card-img-overlay bi bi-heart-fill text-danger fs-3"
-                        onClick={() => addToWishList(product)}
+                        onClick={(e) => {
+                          if (!selectedSize[product._id]) {
+                            toast("Please Selected the size");
+                            return;
+                          } else {
+                            addToWishList(product, selectedSize[product._id]);
+                            setAddedProductId(product._id);
+                          }
+                        }}
                       ></i>
                       <img
                         src={product.productImage}
@@ -383,7 +395,16 @@ const ProductListing = () => {
                     <div className="d-flex justify-content-center align-items-center flex-column gap-1">
                       <h5 className="card-text">{product.productName}</h5>
                       <h6>${product.productPrice}</h6>
-                      <select name="" id="" className="form-select mb-3" onChange={(e) => setSelectedSize(e.target.value)}>
+                      <select
+                        value={selectedSize[product._id] || ""}
+                        className="form-select mb-2"
+                        onChange={(e) =>
+                          setSelectedSize({
+                            ...selectedSize,
+                            [product._id]: e.target.value,
+                          })
+                        }
+                      >
                         <option value="">Select Size</option>
                         <option value="S">S</option>
                         <option value="M">M</option>
@@ -395,20 +416,21 @@ const ProductListing = () => {
                       <Link
                         to={addedProductId === product._id ? "/cart" : "#"}
                         onClick={(e) => {
-
-                          if(!selectedSize){
-                            e.preventDefault()
-                            toast('Please Selected the size')
+                          const size = selectedSize[product._id]
+                          if (!selectedSize) {
+                            e.preventDefault();
+                            toast("Please Selected the size");
+                            return;
                           }
-
-                          e.preventDefault()
-                          addToCart(product, selectedSize);
-                          setSelectedSize(false)
-                          setAddedProductId(product._id);
+                          if (addedProductId !== product._id) {
+                            e.preventDefault();
+                            addToCart(product, size);
+                            setAddedProductId(product._id);
+                          }
                         }}
                         className="btn btn-primary px-5 mx-3 mb-2"
                       >
-                        {addedProductId === product._id && selectedSize
+                        {addedProductId === product._id
                           ? "Go To Cart"
                           : "Add To Cart"}
                       </Link>

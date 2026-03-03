@@ -27,7 +27,12 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const addToCart = async (product, selectedSize = "") => {
+  const addToCart = async (product, selectedSize) => {
+    if (!selectedSize) {
+      toast("Please select the size");
+      return;
+    }
+
     try {
       const res = await fetch(
         `https://major-project-backend1.vercel.app/api/cart/${product._id}`,
@@ -44,15 +49,13 @@ export const CartProvider = ({ children }) => {
       );
 
       const data = await res.json();
-      const newCartItem = data?.data;
 
       if (!res.ok) {
-        toast("Please select the size");
+        toast(data?.message || "Failed to add to cart");
         return;
-      }else{
-        toast(`${product.productName} added to cart successfully!`);
       }
 
+      toast(`${product.productName} added to cart successfully!`);
 
       setCart((prev) => {
         const existing = prev.find(
@@ -76,7 +79,6 @@ export const CartProvider = ({ children }) => {
         return [
           ...prev,
           {
-            _id: newCartItem._id,
             product,
             productQuantity: 1,
             productSize: selectedSize,
@@ -84,7 +86,8 @@ export const CartProvider = ({ children }) => {
         ];
       });
     } catch (error) {
-      throw error;
+      console.error(error);
+      toast("Something went wrong");
     }
   };
 
@@ -189,39 +192,67 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const addToWishList = async (product) => {
+  const addToWishList = async (product, selectedSize) => {
+    if (!selectedSize) {
+      toast("Please select the size");
+      return;
+    }
+
     try {
       const res = await fetch(
         `https://major-project-backend1.vercel.app/api/wishlist/${product._id}`,
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            productQuantity: 1,
+            productSize: selectedSize,
+          }),
         },
       );
+
       const data = await res.json();
 
-      const newItem = data?.data;
-
-      if (res.ok) {
-        toast(`${product.productName} added to wishlist successfully!`);
-      } else {
-        toast("Something went wrong in wishlist Data");
+      if (!res.ok) {
+        toast(data?.message || "Failed to add to wishlist");
+        return;
       }
 
-      setWishList((prev) => {
-        const exists = prev.find((item) => item.product._id === product._id);
+      toast(`${product.productName} added to wishlist successfully!`);
 
-        if (exists) return prev;
+      setWishList((prev) => {
+        const existing = prev.find(
+          (item) =>
+            item.product._id === product._id &&
+            item.productSize === selectedSize,
+        );
+
+        if (existing) {
+          return prev.map((item) =>
+            item.product._id === product._id &&
+            item.productSize === selectedSize
+              ? {
+                  ...item,
+                  productQuantity: item.productQuantity + 1,
+                }
+              : item,
+          );
+        }
 
         return [
           ...prev,
           {
-            _id: newItem._id,
             product,
+            productQuantity: 1,
+            productSize: selectedSize,
           },
         ];
       });
     } catch (error) {
       console.error(error);
+      toast("Something went wrong");
     }
   };
 
