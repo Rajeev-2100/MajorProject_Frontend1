@@ -1,15 +1,15 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import CartContext from "../useContext/Cart";
-import { useState } from "react";
 import { toast } from "react-toastify";
-
 
 const WishListPage = () => {
   const [addedProductId, setAddedProductId] = useState(null);
-  const [selectedSize, setSelectedSize] = useState(false);
+  const [selectedSize, setSelectedSize] = useState({});
+  const [removedId, setRemovedId] = useState(null);
+
   const {
     wishList,
     wishListLoaded,
@@ -21,20 +21,22 @@ const WishListPage = () => {
   if (!wishListLoaded) {
     getAllWishListDetail();
   }
-  // console.log("Wishlist: ", wishList);
+  // console.log('Remove Id:', removedId)
 
   return (
     <>
       <Header />
       <main className="container py-5">
-        <h4 className="text-center mb-4">My Wishlist ({wishList.length})</h4>
+        <h4 className="text-center mb-4">
+          My Wishlist ({wishList?.length || 0})
+        </h4>
 
-        {wishList.length === 0 ? (
+        {wishList?.length === 0 ? (
           <p className="text-center">Your Wishlist is Empty</p>
         ) : (
           <div className="d-flex flex-wrap justify-content-between gap-5">
-            {wishList.map((item) => (
-              console.log('Helo:', item),
+            {wishList?.map((item) => (
+              // console.log(item),
               <div className="card" key={item._id} style={{ width: "20rem" }}>
                 <img
                   src={item.product.productImage}
@@ -42,17 +44,22 @@ const WishListPage = () => {
                   alt={item.product.productName}
                   style={{ height: "200px", objectFit: "cover" }}
                 />
+
                 <div className="card-body text-center">
                   <h6 className="card-title">{item.product.productName}</h6>
+
                   <h5>${item.product.productPrice}</h5>
-                  <div className="d-flex flex-column gap-1">
+
+                  <div className="d-flex flex-column gap-2">
                     <select
-                      name=""
-                      id=""
-                      value={selectedSize || ""}
-                      className="form-select mb-3"
-                      onChange={(e) => setSelectedSize(e.target.value)}
-                    >
+                      className="form-select"
+                      value={selectedSize[item.product._id] || ""}
+                      onChange={(e) =>
+                        setSelectedSize((prev) => ({
+                          ...prev,
+                          [item.product._id]: e.target.value,
+                        }))
+                      }>
                       <option value="">Select Size</option>
                       <option value="S">S</option>
                       <option value="M">M</option>
@@ -64,28 +71,42 @@ const WishListPage = () => {
                     <Link
                       to={addedProductId === item.product._id ? "/cart" : "#"}
                       onClick={(e) => {
-                        if (!selectedSize) {
+                        const size = selectedSize[item.product._id];
+
+                        if (!size) {
                           e.preventDefault();
-                          toast("Please Selected the size");
+                          toast("Please select size");
+                          return;
+                        }
+
+                        if (addedProductId === item.product._id) {
+                          return;
                         }
 
                         e.preventDefault();
-                        addToCart(item.product, selectedSize);
-                        setSelectedSize(false);
+
+                        addToCart(item.product, size);
                         setAddedProductId(item.product._id);
                       }}
-                      className="btn btn-primary px-5 mx-3 mb-2"
+                      className="btn btn-primary"
                     >
-                      {addedProductId === item.product._id && !selectedSize || ""
+                      {addedProductId === item.product._id
                         ? "Go To Cart"
                         : "Add To Cart"}
                     </Link>
+
                     <Link
+                      to="#"
                       className="btn btn-secondary"
-                      to={`/wishList`}
-                      onClick={() => removeToWishlist(item._id)}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        removeToWishlist(item._id);
+                        setRemovedId(item?._id);
+                      }}
                     >
-                      Remove WishList
+                      {removedId === item?._id
+                        ? "Remove from Wishlist"
+                        : "Remove Wishlist"}
                     </Link>
                   </div>
                 </div>

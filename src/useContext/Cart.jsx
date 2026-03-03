@@ -214,6 +214,8 @@ export const CartProvider = ({ children }) => {
       );
 
       const data = await res.json();
+      const newWishlist = data?.data
+      // console.log('NewWishlistData: ', newWishlist)
 
       if (!res.ok) {
         toast(data?.message || "Failed to add to wishlist");
@@ -243,7 +245,8 @@ export const CartProvider = ({ children }) => {
 
         return [
           ...prev,
-          {
+          { 
+            _id: newWishlist,
             product,
             productQuantity: 1,
             productSize: selectedSize,
@@ -266,11 +269,12 @@ export const CartProvider = ({ children }) => {
       );
       const data = res.json();
 
-      if (res.ok) {
-        toast(`This wishlist Id remove successfully!`);
-      } else {
-        toast("Something went wrong in wishlist Data");
+      if (!res.ok) {
+        toast(data?.message || "Something went wrong in wishlist Data");
+        return
       }
+
+      toast('Wishlist item removed successfully!')
 
       setWishList((prev) => prev.filter((item) => item._id !== wishlistId));
     } catch (error) {
