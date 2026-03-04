@@ -3,7 +3,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import CartContext from "../useContext/Cart";
 import UserContext from "../useContext/User";
-import { Link } from "react-router";
 import OrderContext from "../useContext/Order";
 
 const Checkout = () => {
@@ -14,20 +13,22 @@ const Checkout = () => {
     userAddress,
     updateUserAddress,
     deletedUserAddress,
-    deletedMessage,
     formSubmitted,
-    setFormSubmitted,
+    formHandler,
     address,
     setAddress,
     location,
     setLocation,
   } = useContext(UserContext);
+
   const { cart } = useContext(CartContext);
 
   const [editingAddressId, setEditingAddressId] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
 
   const placeOrderFromCart = async () => {
+    if (!selectedAddressId) return;
+
     for (const item of cart) {
       await handlePayment(
         userDetails[0]._id,
@@ -38,200 +39,234 @@ const Checkout = () => {
     }
   };
 
-  const DELIVERY_CHARGES = 125;
-  const subtotal = cart.reduce((acc, curr) => {
-    let sum = acc + curr.product.productPrice * curr.productQuantity;
-    return sum;
-  }, 0);
-  const totalPrice = subtotal + DELIVERY_CHARGES;
-  console.log("TotalPrice: ", totalPrice);
-
-  const formHandler = async (e) => {
-    e.preventDefault();
-    try {
-      if (editingAddressId) {
-        await updateUserAddress(editingAddressId, { address, location });
-        setFormSubmitted("✅ Address updated successfully!");
-        setEditingAddressId(null);
-      } else {
-        const res = await fetch("https://major-project-backend1.vercel.app/api/address", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ address, location }),
-        });
-        const responseData = await res.json();
-        console.log("Address saved: ", responseData);
-        setFormSubmitted("✅ Address added successfully!");
-      }
-      setAddress("");
-      setLocation("");
-    } catch (error) {
-      console.error("Error saving address:", error);
-      setFormSubmitted("Error saving address");
-    }
-  };
-
   const handleEditClick = (addr) => {
     setAddress(addr.address);
     setLocation(addr.location);
     setEditingAddressId(addr._id);
   };
 
-  const handleDelete = (addrId) => {
-    deletedUserAddress(addrId);
-    if (selectedAddressId === addrId) {
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+
+    if (!editingAddressId) return;
+
+    await updateUserAddress(editingAddressId, {
+      address,
+      location,
+    });
+
+    setEditingAddressId(null);
+    setAddress("");
+    setLocation("");
+  };
+
+  const handleDelete = (id) => {
+    deletedUserAddress(id);
+
+    if (selectedAddressId === id) {
       setSelectedAddressId(null);
     }
   };
 
+  const DELIVERY_CHARGES = 125;
+
+  const subtotal = cart.reduce(
+    (acc, curr) => acc + curr.product.productPrice * curr.productQuantity,
+    0,
+  );
+
+  const totalPrice = subtotal + DELIVERY_CHARGES;
+
   return (
     <>
       <Header />
+
       <main className="container py-5">
-        <h1 className="mb-4 ">CheckOut</h1>
+        <h2 className="mb-4 fw-bold text-center">Checkout</h2>
 
-        {userDetails?.map((user) => (
-          <>
-            <h2>User Profile</h2>
-            <p>Name: {user.name}</p>
-            <p>Email: {user.email}</p>
-            <p>Phone Number: {user.number}</p>
-          </>
-        ))}
-
-        <div>
-          {cart.map((item) => (
-            <>
-              <div key={item.id} className="d-flex justify-content-between">
-                <div>
-                  <h5 className="my-3">{item.product.productName}</h5>
-                  <h6>Quantity: {item.productQuantity}</h6>
-                </div>
-                <div>
-                  <h4>Total Price: ${item.product.productPrice}</h4>
-                </div>
+        <div className="row g-4">
+          <div className="col-lg-8">
+            <div className="card shadow-sm mb-4">
+              <div className="card-body">
+                <h5 className="fw-bold mb-3">User Information</h5>
+                {userDetails?.map((user) => (
+                  <div key={user._id}>
+                    <p className="mb-1">
+                      <strong>Name:</strong> {user.name}
+                    </p>
+                    <p className="mb-1">
+                      <strong>Email:</strong> {user.email}
+                    </p>
+                    <p className="mb-0">
+                      <strong>Phone:</strong> {user.number}
+                    </p>
+                  </div>
+                ))}
               </div>
-            </>
-          ))}
-        </div>
+            </div>
 
-        <hr />
+            <div className="card shadow-sm mb-4">
+              <div className="card-body">
+                <h5 className="fw-bold mb-3">Order Items</h5>
 
-        <form onSubmit={formHandler}>
-          <div className="mb-3">
-            <label htmlFor="address" className="form-label">
-              {editingAddressId ? "Update Address:" : "Change Address:"}
-            </label>
-            <input
-              id="address"
-              type="text"
-              className="form-control"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              required
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="location" className="form-label">
-              {editingAddressId ? "Update Location:" : "Change Location:"}
-            </label>
-            <input
-              id="location"
-              type="text"
-              className="form-control"
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit" className="btn btn-primary">
-            {editingAddressId ? "Update Address" : "Save Address"}
-          </button>
-          {editingAddressId && (
-            <button
-              type="button"
-              className="btn btn-secondary ms-2"
-              onClick={() => {
-                setEditingAddressId(null);
-                setAddress("");
-                setLocation("");
-              }}
-            >
-              Cancel
-            </button>
-          )}
-          {formSubmitted && (
-            <div className="alert alert-success mt-3">{formSubmitted}</div>
-          )}
-        </form>
+                {cart.map((item) => (
+                  <div
+                    key={item._id}
+                    className="d-flex justify-content-between border-bottom py-2"
+                  >
+                    <div>
+                      <p className="mb-0 fw-semibold">
+                        {item.product.productName}
+                      </p>
+                      <small className="text-muted">
+                        Qty: {item.productQuantity}
+                      </small>
+                    </div>
+                    <p className="mb-0 fw-semibold">
+                      ₹{item.product.productPrice}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
-        <div className="d-flex justify-content-between mt-4">
-          <div>
-            <h5>Delivery Charges: $125</h5>
-            <h4>Total Amount: ${totalPrice.toFixed(2)}</h4>
-          </div>
-        </div>
+            <div className="card shadow-sm mb-4">
+              <div className="card-body">
+                <h5 className="fw-bold mb-3">
+                  {editingAddressId ? "Update Address" : "Add New Address"}
+                </h5>
 
-        <div className="mt-5">
-          <h6>Choose Delivery Address</h6>
-          {userDetails[0] && (
-            <div className="mb-4">
-              <h6>{userDetails[0].name}</h6>
-              <ul className="list-group">
+                <form onSubmit={editingAddressId ? handleUpdate : formHandler}>
+                  <div className="mb-3">
+                    <label className="form-label">Address</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label">Location</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
+                      required
+                    />
+                  </div>
+
+                  <div className="d-flex gap-2">
+                    <button className="btn btn-primary">
+                      {editingAddressId ? "Update Address" : "Save Address"}
+                    </button>
+
+                    {editingAddressId && (
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        onClick={() => {
+                          setEditingAddressId(null);
+                          setAddress("");
+                          setLocation("");
+                        }}
+                      >
+                        Cancel
+                      </button>
+                    )}
+                  </div>
+                </form>
+
+                {formSubmitted && (
+                  <div className="alert alert-success mt-3">
+                    {formSubmitted}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="card shadow-sm">
+              <div className="card-body">
+                <h5 className="fw-bold mb-3">Delivery Address</h5>
+
                 {userAddress.map((addr) => (
-                  <li key={addr._id} className="list-group-item">
-                    <div className="d-flex align-items-start">
-                      <div className="form-check me-3 mt-1">
+                  <div key={addr._id} className="border rounded p-3 mb-3">
+                    <div className="d-flex justify-content-between">
+                      <div className="d-flex gap-2">
                         <input
-                          className="form-check-input"
                           type="radio"
-                          name="deliveryAddress"
-                          id={`addr-${addr._id}`}
                           checked={selectedAddressId === addr._id}
                           onChange={() => setSelectedAddressId(addr._id)}
                         />
+
+                        <div>
+                          <p className="mb-1 fw-semibold">{addr.address}</p>
+                          <small className="text-muted">{addr.location}</small>
+                        </div>
                       </div>
-                      <div className="flex-grow-1">
-                        <p>
-                          {addr.address} {addr.location}
-                        </p>
-                      </div>
+
                       <div className="d-flex gap-2">
                         <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(addr._id)}
-                        >
-                          DELETE Addr
-                        </button>
-                        <button
-                          className="btn btn-warning btn-sm"
+                          className="btn btn-outline-warning btn-sm"
                           onClick={() => handleEditClick(addr)}
                         >
-                          Update Addr
+                          Edit
+                        </button>
+
+                        <button
+                          className="btn btn-outline-danger btn-sm"
+                          onClick={() => handleDelete(addr._id)}
+                        >
+                          Delete
                         </button>
                       </div>
                     </div>
-                  </li>
+                  </div>
                 ))}
-                {deletedMessage && (
-                  <p className="p-3 alert alert-info mt-2">{deletedMessage}</p>
-                )}
-              </ul>
+              </div>
             </div>
-          )}
-        </div>
-
-        {selectedAddressId && cart.length > 0 && (
-          <div className="text-center mt-4">
-            <button
-              className="btn btn-success btn-lg"
-              onClick={placeOrderFromCart}
-            >
-              {loading ? "Processing..." : "Proceed to Payment"}
-            </button>
           </div>
-        )}
+
+          <div className="col-lg-4">
+            <div className="card shadow-sm sticky-top" style={{ top: "100px" }}>
+              <div className="card-body">
+                <h5 className="fw-bold mb-3">Order Summary</h5>
+
+                <div className="d-flex justify-content-between mb-2">
+                  <span>Subtotal</span>
+                  <span>${subtotal.toFixed(2)}</span>
+                </div>
+
+                <div className="d-flex justify-content-between mb-2">
+                  <span>Delivery</span>
+                  <span>$125</span>
+                </div>
+
+                <hr />
+
+                <div className="d-flex justify-content-between fw-bold mb-3">
+                  <span>Total</span>
+                  <span>₹{totalPrice.toFixed(2)}</span>
+                </div>
+
+                {selectedAddressId && cart.length > 0 && (
+                  <button
+                    className="btn btn-success w-100"
+                    onClick={placeOrderFromCart}
+                    disabled={loading}
+                  >
+                    {loading ? "Processing..." : "Proceed to Payment"}
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
+
       <Footer />
     </>
   );
