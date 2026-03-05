@@ -6,6 +6,7 @@ import ProductContext from "../useContext/product";
 const Header = () => {
   const [search, setSearch] = useState("");
   const { setSearchTerm } = useContext(ProductContext);
+
   const {
     cart,
     wishList,
@@ -46,7 +47,7 @@ const Header = () => {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarContent">
-          <form className="d-flex mx-auto my-2 my-lg-0 w-100 w-lg-50">
+          <form className="d-flex mx-lg-auto my-3 my-lg-0 w-100 w-lg-50">
             <input
               className="form-control"
               type="search"
@@ -56,7 +57,7 @@ const Header = () => {
             />
           </form>
 
-          <div className="d-flex align-items-center gap-3 ms-lg-3 mt-3 mt-lg-0">
+          <div className="d-flex flex-column flex-lg-row align-items-end align-items-lg-center gap-3 ms-lg-3">
             <Link to={`/userProfile`}>
               <i className="bi bi-person fs-4 text-dark"></i>
             </Link>
@@ -76,9 +77,21 @@ const Header = () => {
             <Link
               to={`/cart`}
               className="text-decoration-none text-dark d-flex align-items-center gap-1"
+              data-bs-toggle="collapse"
+              data-bs-target=".navbar-collapse.show"
             >
               <i className="bi bi-cart fs-4"></i>
               <span className="d-lg-inline d-none">Cart</span>({cart.length})
+            </Link>
+
+            <Link
+              to="/order"
+              className="text-decoration-none text-dark d-flex align-items-center gap-1"
+              data-bs-toggle="collapse"
+              data-bs-target=".navbar-collapse.show"
+            >
+              <i className="bi bi-box-fill fs-4"></i>
+              <span className="d-lg-inline d-none">Order</span>
             </Link>
           </div>
         </div>
