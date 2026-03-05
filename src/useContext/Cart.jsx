@@ -215,7 +215,7 @@ export const CartProvider = ({ children }) => {
 
       const data = await res.json();
       const newWishlist = data?.data
-      // console.log('NewWishlistData: ', newWishlist)
+      console.log('NewWishlistData: ', newWishlist)
 
       if (!res.ok) {
         toast(data?.message || "Failed to add to wishlist");
@@ -246,7 +246,7 @@ export const CartProvider = ({ children }) => {
         return [
           ...prev,
           { 
-            _id: newWishlist,
+            _id: newWishlist._id,
             product,
             productQuantity: 1,
             productSize: selectedSize,
