@@ -26,7 +26,6 @@ const ProductListing = () => {
   } = useContext(ProductContext);
 
   const { addToCart, addToWishList } = useContext(CartContext);
-  // console.log('Selected Size: ',selectedSize)
 
   const finalProducts = categoryName
     ? sortedProducts.filter(
@@ -360,18 +359,18 @@ const ProductListing = () => {
                 products)
               </h5>
             </div>
-            <div className="mx-4 d-flex gap-5 flex-wrap">
+            <div className="d-flex justify-content-around gap-4 flex-wrap">
               {finalProducts?.map((product) => (
                 // console.log(product),
                 <>
                   <div
                     key={product._id}
-                    className="card d-flex align-items-center justify-content-center"
-                    style={{ width: "18rem" }}
+                    className="card w-100 d-flex align-items-center justify-content-center p-3"
+                    style={{ maxWidth: "18rem" }}
                   >
                     <div
-                      className="card d-flex align-items-center justify-content-center"
-                      style={{ width: "18rem" }}
+                      className="card d-flex align-items-center justify-content-center "
+                    style={{ maxWidth: "18rem" }}
                     >
                       <i
                         className="card-img-overlay bi bi-heart-fill text-danger fs-3"

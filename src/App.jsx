@@ -13,16 +13,17 @@ function App() {
       <Header />
       <main className="container py-5">
         <section className="mb-5">
-          <div className="d-flex justify-content-center align-items-center">
+          <div className="d-flex justify-content-center align-items-center ">
             <img
-              src="https://img.freepik.com/premium-photo/young-cheerful-couple-have-fun-drive-shopping-trolley-cart-holding-shopping-bag-mall_146105-24123.jpg?w=1380"
+              src="https://img.freepik.com/premium-photo/young-cheerful-couple-have-fun-drive-shopping-trolley-cart-holding-shopping-bag-mall_146105-24123.jpg?w=1080"
               alt=""
+              className="img-fluid"
             />
           </div>
         </section>
         <section>
           <h2 className="text-center py-5">Category Section</h2>
-        <div className="d-flex justify-content-between flex-row flex-wrap gap-4">
+        <div className="d-flex justify-content-between flex-row flex-wrap gap-4 justify-content-sm-center">
           <div className="d-flex align-items-center flex-column">
             <Link to={`/category/Women`}>
               <img

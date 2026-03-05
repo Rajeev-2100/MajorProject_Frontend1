@@ -31,7 +31,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-body-tertiary shadow-sm">
+    <header className="bg-body-tertiary shadow-sm px-4 px-lg-0">
       <nav className="navbar navbar-expand-lg container">
         <Link className="navbar-brand fw-bold" to="/">
           MyShoppingSite
@@ -76,19 +76,14 @@ const Header = () => {
 
             <Link
               to={`/cart`}
-              className="text-decoration-none text-dark d-flex align-items-center gap-1"
-              data-bs-toggle="collapse"
-              data-bs-target=".navbar-collapse.show"
-            >
+              className="text-decoration-none text-dark d-flex align-items-center gap-1"            >
               <i className="bi bi-cart fs-4"></i>
               <span className="d-lg-inline d-none">Cart</span>({cart.length})
             </Link>
 
             <Link
-              to="/order"
+              to={`/order`}
               className="text-decoration-none text-dark d-flex align-items-center gap-1"
-              data-bs-toggle="collapse"
-              data-bs-target=".navbar-collapse.show"
             >
               <i className="bi bi-box-fill fs-4"></i>
               <span className="d-lg-inline d-none">Order</span>

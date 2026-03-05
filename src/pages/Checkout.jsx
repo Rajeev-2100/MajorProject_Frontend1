@@ -81,7 +81,7 @@ const Checkout = () => {
     <>
       <Header />
 
-      <main className="container py-5">
+      <main className="container py-5 ">
         <h2 className="mb-4 fw-bold text-center">Checkout</h2>
 
         <div className="row g-4">
