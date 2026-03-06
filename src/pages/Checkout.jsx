@@ -208,9 +208,10 @@ const Checkout = () => {
                         </div>
                       </div>
 
-                      <div className="d-flex gap-2">
+                      <div className="d-flex gap-2 flex-wrap">
                         <button
                           className="btn btn-outline-warning btn-sm"
+                          style={{ width: "120px", height: "38px" }}
                           onClick={() => handleEditClick(addr)}
                         >
                           Edit
@@ -218,6 +219,7 @@ const Checkout = () => {
 
                         <button
                           className="btn btn-outline-danger btn-sm"
+                          style={{ width: "120px", height: "38px" }}
                           onClick={() => handleDelete(addr._id)}
                         >
                           Delete
