@@ -52,15 +52,8 @@ const ProductDetail = () => {
               width={1100}
               className="img-thumbnail object-fit-contain"
             />
-            <div className="d-flex justify-content-center gap-5">
-              <Link
-                to={`/cart`}
-                onClick={() => addToCart(productData)}
-                className="m-3 btn btn-primary"
-              >
-                Add to Cart
-              </Link>
-              <Link to={`/checkOut`} className="btn btn-primary m-3">Buy to Now</Link>
+            <div className="d-flex justify-content-center align-items-center">
+              <Link to={`/checkOut`} className="btn btn-primary m-3 px-5">Buy to Now</Link>
             </div>
           </div>
           <div className="p-2 mx-5 fs-5">
