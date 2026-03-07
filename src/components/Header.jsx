@@ -57,7 +57,7 @@ const Header = () => {
             />
           </form>
 
-          <div className="d-flex flex-column flex-lg-row align-items-end align-items-lg-center gap-3 ms-lg-3">
+          <div className="d-flex flex-row flex-lg-row align-items-end align-items-lg-center gap-3 ms-lg-3">
             <Link to={`/userProfile`}>
               <i className="bi bi-person fs-4 text-dark"></i>
             </Link>
