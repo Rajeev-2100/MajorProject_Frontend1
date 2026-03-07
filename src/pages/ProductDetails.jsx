@@ -66,7 +66,7 @@ const ProductDetail = () => {
           <div className="p-2 mx-5 fs-5">
             <h2 className="fw-bolder">{productData?.productName}</h2>
             <p>
-              <b className="">rating:</b> {productData?.rating}
+              <b className="">Rating:</b> {productData?.rating}
             </p>
             <p>
               <b className="fw-bold">$</b>
