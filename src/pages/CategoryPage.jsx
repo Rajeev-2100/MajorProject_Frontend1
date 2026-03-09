@@ -34,7 +34,7 @@ const CategoryPage = () => {
               <p>Loading...</p>
             ) : (
               categoryData.map((product) => (
-                <div className="col-md-4 mb-4" key={product._id}>
+                <div className="col-lg-4 col-md-6 mb-4" key={product._id}>
                   <div className="card h-100 shadow-sm">
                     <img
                       src={product.productImage}
@@ -68,7 +68,7 @@ const CategoryPage = () => {
                         <option value="XXL">XXL</option>
                       </select>
 
-                      <div className="d-flex gap-3">
+                      <div className="d-flex gap-3 flex-sm-column">
                         <button
                           className="btn btn-primary"
                           onClick={() => {
