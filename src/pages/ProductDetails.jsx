@@ -16,89 +16,92 @@ export const productMRP = (productData) => {
 
   const totalPrice = productData ? productData.productPrice * quantity : 0;
 
-  return { increaseQty, decreaseQty, totalPrice, quantity } 
-}
+  return { increaseQty, decreaseQty, totalPrice, quantity };
+};
 
 const ProductDetail = () => {
   const { addToCart } = useContext(CartContext);
   const { productId } = useParams();
-  
+
   const { data, loading, error } = useFetch(
     `https://major-project-backend1.vercel.app/api/products/${productId}`,
   );
 
   const productData = data?.data;
-  const { increaseQty, decreaseQty, totalPrice, quantity } = productMRP(productData)
+  const { increaseQty, decreaseQty, totalPrice, quantity } =
+    productMRP(productData);
 
   if (error) <p>{error.message}</p>;
 
   return (
     <>
-      <Header />
-      <main className="container py-5">
-        {loading && (
-          <>
-            <p className="d-flex justify-content-center align-items-center">
-              loading...
-            </p>
-          </>
-        )}
+      <div className="d-flex flex-column min-vh-100">
+        <Header />
+        <main className="container py-5 flex-grow-1">
+          {loading && (
+            <>
+              <p className="d-flex justify-content-center align-items-center">
+                loading...
+              </p>
+            </>
+          )}
 
-        <div className="d-flex">
-          <div className="">
-            <img
-              src={productData?.productImage}
-              alt=""
-              width={1100}
-              className="img-thumbnail object-fit-contain"
-            />
-            <div className="d-flex justify-content-center align-items-center">
-              <Link to={`/checkOut`} className="btn btn-primary m-3 px-5">Buy to Now</Link>
+          <div className="d-flex">
+            <div className="">
+              <img
+                src={productData?.productImage}
+                alt=""
+                width={1100}
+                className="img-thumbnail object-fit-contain"
+              />
+              <div className="d-flex justify-content-center align-items-center">
+                <Link to={`/checkOut`} className="btn btn-primary m-3 px-5">
+                  Buy to Now
+                </Link>
+              </div>
+            </div>
+            <div className="p-2 mx-5 fs-5">
+              <h2 className="fw-bolder">{productData?.productName}</h2>
+              <p>
+                <b className="">Rating:</b> {productData?.rating}
+              </p>
+              <p>
+                <b className="fw-bold">$</b>
+                {productData?.productPrice}
+              </p>
+              <p>
+                {productData?.discountPrice}
+                <b>% off</b>
+              </p>
+              <h5>
+                <div className="d-flex gap-3 align-items-center">
+                  <i
+                    className="bi bi-dash-circle-fill"
+                    style={{ cursor: "pointer" }}
+                    onClick={decreaseQty}
+                  ></i>
+                  <span>Quantity: {quantity}</span>
+                  <i
+                    className="bi bi-plus-circle-fill"
+                    style={{ cursor: "pointer" }}
+                    onClick={increaseQty}
+                  ></i>
+                </div>
+              </h5>
+              <h2>Total Price: ${totalPrice}</h2>
+              <p>
+                <b className="fw-bold">Size: </b>
+                {productData?.size}
+              </p>
+              <p>
+                <b className="fw-bold">Description:</b> <br />
+                {productData?.productDescription.join(", ")}
+              </p>
             </div>
           </div>
-          <div className="p-2 mx-5 fs-5">
-            <h2 className="fw-bolder">{productData?.productName}</h2>
-            <p>
-              <b className="">Rating:</b> {productData?.rating}
-            </p>
-            <p>
-              <b className="fw-bold">$</b>
-              {productData?.productPrice}
-            </p>
-            <p>
-              {productData?.discountPrice}
-              <b>% off</b>
-            </p>
-            <h5>
-              <div className="d-flex gap-3 align-items-center">
-                <i
-                  className="bi bi-dash-circle-fill"
-                  style={{ cursor: "pointer" }}
-                  onClick={decreaseQty}
-                ></i>
-                <span>Quantity: {quantity}</span>
-                <i
-                  className="bi bi-plus-circle-fill"
-                  style={{ cursor: "pointer" }}
-                  onClick={increaseQty}
-                ></i>
-              </div>
-            </h5>
-            <h2>
-             Total Price: ${totalPrice}
-            </h2>
-            <p>
-              <b className="fw-bold">Size: </b>
-              {productData?.size}
-            </p>
-            <p>
-              <b className="fw-bold">Description:</b> <br />
-              {productData?.productDescription.join(", ")}
-            </p>
-          </div>
-        </div>
-      </main>
-      <Footer />
+        </main>
+        <Footer />
+      </div>
     </>
   );
 };
