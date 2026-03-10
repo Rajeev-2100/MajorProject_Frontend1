@@ -395,7 +395,10 @@ const ProductListing = () => {
 
                     <div className="d-flex justify-content-center align-items-center flex-column gap-1">
                       <h5 className="card-text">{product.productName}</h5>
-                      <h6>${product.productPrice}</h6>
+                      <div className="d-flex justify-content-around gap-5 w-100">
+                        <h6>MRP: ${product.productPrice}</h6>
+                        <h6>{product.rating} Rating</h6>
+                      </div>
                       <select
                         value={selectedSize[product._id] || ""}
                         className="form-select mb-2"
