@@ -214,8 +214,8 @@ export const CartProvider = ({ children }) => {
       );
 
       const data = await res.json();
-      const newWishlist = data?.data
-      console.log('NewWishlistData: ', newWishlist)
+      const newWishlist = data?.data;
+      console.log("NewWishlistData: ", newWishlist);
 
       if (!res.ok) {
         toast(data?.message || "Failed to add to wishlist");
@@ -245,7 +245,7 @@ export const CartProvider = ({ children }) => {
 
         return [
           ...prev,
-          { 
+          {
             _id: newWishlist._id,
             product,
             productQuantity: 1,
@@ -271,14 +271,35 @@ export const CartProvider = ({ children }) => {
 
       if (!res.ok) {
         toast(data?.message || "Something went wrong in wishlist Data");
-        return
+        return;
       }
 
-      toast('Wishlist item removed successfully!')
+      toast("Wishlist item removed successfully!");
 
       setWishList((prev) => prev.filter((item) => item._id !== wishlistId));
     } catch (error) {
       console.error(error);
+    }
+  };
+
+  const deleteAllCart = async () => {
+    try {
+      const response = await fetch(
+        "https://major-project-backend1.vercel.app/api/cart/deletedAll",
+        {
+          method: "DELETE",
+        },
+      );
+      const data = await response.json();
+      console.log(data.message);
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to delete cart");
+      }
+
+      setCart([]);
+    } catch (error) {
+      console.error("Error deleting cart:", error);
     }
   };
 
@@ -288,6 +309,7 @@ export const CartProvider = ({ children }) => {
         cart,
         wishList,
         cartLoaded,
+        deleteAllCart,
         wishListLoaded,
         getAllCartDetail,
         getAllWishListDetail,

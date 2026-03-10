@@ -82,10 +82,13 @@ const ProductListing = () => {
           </>
         )}
 
-        <div className="d-flex" style={{ minHeight: "80vh" }}>
+        <div
+          className="d-flex flex-column flex-md-row"
+          style={{ minHeight: "80vh" }}
+        >
           <div
-            className="d-flex flex-column align-items-start bg-secondary-subtle p-3"
-            style={{ minWidth: "240px", maxHeight: "100vh" }}
+            className="d-flex flex-column align-items-start bg-secondary-subtle p-3 w-100"
+            style={{ minWidth: "260px" }}
           >
             <h4>
               <b>Filter Products</b>
@@ -313,8 +316,8 @@ const ProductListing = () => {
             </button>
           </div>
 
-          <div className="m-4 d-flex flex-column flex-wrap gap-5">
-            <div className="mx-4">
+          <div className="m-4 d-flex flex-column gap-md-3">
+            <div className="mx-0">
               {hasActiveFilters() && (
                 <div className="mb-3">
                   <h4>
@@ -353,13 +356,12 @@ const ProductListing = () => {
                   )}
                 </div>
               )}
-
               <h5>
                 Show All Products (Showing {finalProducts?.length || 0}{" "}
                 products)
               </h5>
             </div>
-            <div className="d-flex justify-content-around gap-4 flex-wrap">
+            <div className="d-flex justify-content-between gap-3 gap-md-2 flex-wrap ">
               {finalProducts?.map((product) => (
                 // console.log(product),
                 <>
@@ -370,7 +372,7 @@ const ProductListing = () => {
                   >
                     <div
                       className="card d-flex align-items-center justify-content-center "
-                    style={{ maxWidth: "18rem" }}
+                      style={{ maxWidth: "18rem" }}
                     >
                       <i
                         className="card-img-overlay bi bi-heart-fill text-danger fs-3"
@@ -386,7 +388,7 @@ const ProductListing = () => {
                       ></i>
                       <img
                         src={product.productImage}
-                        className="img-fluid card-img h-90 object-fit-cover card-img-top"
+                        className="img-fluid card-img h-100 object-fit-cover card-img-top"
                         alt="..."
                       />
                     </div>
@@ -412,33 +414,36 @@ const ProductListing = () => {
                         <option value="XXL">XXL</option>
                       </select>
 
-                      <Link
-                        to={addedProductId === product._id ? "/cart" : "#"}
-                        onClick={(e) => {
-                          const size = selectedSize[product._id]
-                          if (!selectedSize) {
-                            e.preventDefault();
-                            toast("Please Selected the size");
-                            return;
-                          }
-                          if (addedProductId !== product._id) {
-                            e.preventDefault();
-                            addToCart(product, size);
-                            setAddedProductId(product._id);
-                          }
-                        }}
-                        className="btn btn-primary px-5 mx-3 mb-2"
-                      >
-                        {addedProductId === product._id
-                          ? "Go To Cart"
-                          : "Add To Cart"}
-                      </Link>
-                      <Link
-                        to={`/productPage/${product._id}`}
-                        className="px-5 mx-3 mb-3 btn btn-primary"
-                      >
-                        More Detail
-                      </Link>
+                      <div className="d-flex flex-column gap-2 mx-5 pt-2">
+                        <Link
+                          to={addedProductId === product._id ? "/cart" : "#"}
+                          onClick={(e) => {
+                            const size = selectedSize[product._id];
+                            if (!selectedSize) {
+                              e.preventDefault();
+                              toast("Please Selected the size");
+                              return;
+                            }
+                            if (addedProductId !== product._id) {
+                              e.preventDefault();
+                              addToCart(product, size);
+                              setAddedProductId(product._id);
+                            }
+                          }}
+                          className="btn btn-primary "
+                        >
+                          {addedProductId === product._id
+                            ? "Go To Cart"
+                            : "Add To Cart"}
+                        </Link>
+
+                        <Link
+                          to={`/productPage/${product._id}`}
+                          className="btn btn-primary"
+                        >
+                          More Detail
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </>

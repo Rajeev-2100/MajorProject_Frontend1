@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import CartContext from "../useContext/Cart";
 import UserContext from "../useContext/User";
 import OrderContext from "../useContext/Order";
+import { toast } from "react-toastify";
 
 const Checkout = () => {
   const { handlePayment, loading } = useContext(OrderContext);
@@ -21,7 +22,7 @@ const Checkout = () => {
     setLocation,
   } = useContext(UserContext);
 
-  const { cart } = useContext(CartContext);
+  const { cart, deleteAllCart } = useContext(CartContext);
 
   const [editingAddressId, setEditingAddressId] = useState(null);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
@@ -37,6 +38,8 @@ const Checkout = () => {
         item.product._id,
       );
     }
+    await deleteAllCart();
+    toast("Also the Cart deleted successfully!");
   };
 
   const handleEditClick = (addr) => {
