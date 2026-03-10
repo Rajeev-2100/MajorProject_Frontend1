@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import CartContext from "../useContext/Cart.jsx";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Cart = () => {
   const {
@@ -25,7 +26,7 @@ const Cart = () => {
   );
   // console.log(totalPrice);
 
-  console.log("Cart Data: ", cart);
+  // console.log("Cart Data: ", cart);
 
   return (
     <>
@@ -40,10 +41,13 @@ const Cart = () => {
             <div className="row">
               <div className="col-md-8">
                 {cart.map((item) => (
-                  // console.log(item),
+                  console.log(item),
                   <div key={item._id} className="card mb-4">
                     <div className="row g-0">
-                      <div className="col-md-4">
+                      <div className="col-md-4 position-relative">
+                        <p className="position-absolute text-white bg-dark p-3">
+                          {item.product.rating}
+                        </p>
                         <img
                           src={item.product.productImage}
                           className="img-fluid rounded-start  w-100 h-100 object-fit-cover "
@@ -97,7 +101,9 @@ const Cart = () => {
                             <Link
                               to="/wishList"
                               className="btn btn-outline-secondary btn-sm"
-                              onClick={() => addToWishList(item.product)}
+                              onClick={(e) => {
+                                addToWishList(item.product, item.productSize);
+                              }}
                             >
                               Move to Wishlist
                             </Link>

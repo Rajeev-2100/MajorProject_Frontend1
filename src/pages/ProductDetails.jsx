@@ -20,7 +20,7 @@ export const productMRP = (productData) => {
 };
 
 const ProductDetail = () => {
-  const { addToCart } = useContext(CartContext);
+  const [placeOrder, setPlaceOrder] = useState(false);
   const { productId } = useParams();
 
   const { data, loading, error } = useFetch(
@@ -46,7 +46,7 @@ const ProductDetail = () => {
             </>
           )}
 
-          <div className="d-flex">
+          <div className="d-flex flex-lg-row flex-md-column flex-column">
             <div className="">
               <img
                 src={productData?.productImage}
@@ -55,8 +55,12 @@ const ProductDetail = () => {
                 className="img-thumbnail object-fit-contain"
               />
               <div className="d-flex justify-content-center align-items-center">
-                <Link to={`/checkOut`} className="btn btn-primary m-3 px-5">
-                  Buy to Now
+                <Link
+                  onClick={() => setPlaceOrder(!false)}
+                  to={`/checkOut`}
+                  className="btn btn-primary m-3 px-5"
+                >
+                  {placeOrder === true ? "Go to CheckOut page" : "Buy Now"}
                 </Link>
               </div>
             </div>

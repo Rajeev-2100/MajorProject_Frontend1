@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 
 const WishListPage = () => {
   const [addedProductId, setAddedProductId] = useState(null);
-  const [selectedSize, setSelectedSize] = useState({});
   const [removedId, setRemovedId] = useState(null);
 
   const {
@@ -52,42 +51,10 @@ const WishListPage = () => {
                     <h5>${item.product.productPrice}</h5>
 
                     <div className="d-flex flex-column gap-2">
-                      <select
-                        className="form-select"
-                        value={selectedSize[item.product._id] || ""}
-                        onChange={(e) =>
-                          setSelectedSize((prev) => ({
-                            ...prev,
-                            [item.product._id]: e.target.value,
-                          }))
-                        }
-                      >
-                        <option value="">Select Size</option>
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                        <option value="XXL">XXL</option>
-                      </select>
-
                       <Link
                         to={addedProductId === item.product._id ? "/cart" : "#"}
-                        onClick={(e) => {
-                          const size = selectedSize[item.product._id];
-
-                          if (!size) {
-                            e.preventDefault();
-                            toast("Please select size");
-                            return;
-                          }
-
-                          if (addedProductId === item.product._id) {
-                            return;
-                          }
-
-                          e.preventDefault();
-
-                          addToCart(item.product, size);
+                        onClick={() => {
+                          addToCart(item.product, item.productSize);
                           setAddedProductId(item.product._id);
                         }}
                         className="btn btn-primary"

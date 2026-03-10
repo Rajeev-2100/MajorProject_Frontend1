@@ -24,92 +24,93 @@ const CategoryPage = () => {
 
   return (
     <>
-      <Header />
-      <main className="container py-4">
-        <div className="container mt-5">
-          <h2 className="mb-4">{categoryName} Products</h2>
+      <div className="d-flex flex-column min-vh-100">
+        <Header />
+        <main className="container py-4 flex-grow-1">
+          <div className="container mt-5">
+            <h2 className="mb-4">{categoryName} Products</h2>
 
-          <div className="row">
-            {categoryData.length === 0 ? (
-              <p>Loading...</p>
-            ) : (
-              categoryData.map((product) => (
-                <div className="col-lg-4 col-md-6 mb-4" key={product._id}>
-                  <div className="card h-100 shadow-sm">
-                    <img
-                      src={product.productImage}
-                      className="card-img-top"
-                      alt={product.productName}
-                      style={{ height: "250px", objectFit: "cover" }}
-                    />
+            <div className="row">
+              {categoryData.length === 0 ? (
+                <p>Loading...</p>
+              ) : (
+                categoryData.map((product) => (
+                  <div className="col-lg-4 col-md-6 mb-4" key={product._id}>
+                    <div className="card h-100 shadow-sm">
+                      <img
+                        src={product.productImage}
+                        className="card-img-top"
+                        alt={product.productName}
+                        style={{ height: "250px", objectFit: "cover" }}
+                      />
 
-                    <div className="card-body">
-                      <h5 className="card-title">{product.productName}</h5>
+                      <div className="card-body">
+                        <h5 className="card-title">{product.productName}</h5>
 
-                      <p className="card-text fw-bold">
-                        ₹{product.productPrice}
-                      </p>
+                        <p className="card-text fw-bold">
+                          ₹{product.productPrice}
+                        </p>
 
-                      <select
-                        value={selectedSizes[product._id] || ""}
-                        className="form-select mb-3"
-                        onChange={(e) =>
-                          setSelectedSizes((prev) => ({
-                            ...prev,
-                            [product._id]: e.target.value,
-                          }))
-                        }
-                      >
-                        <option value="">Select Size</option>
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
-                        <option value="XL">XL</option>
-                        <option value="XXL">XXL</option>
-                      </select>
-
-                      <div className="d-flex gap-3 flex-sm-column">
-                        <button
-                          className="btn btn-primary"
-                          onClick={() => {
-                            const size = selectedSizes[product._id];
-
-                            if (!size) {
-                              toast("Please select the size");
-                              return;
-                            }
-
-                            addToCart(product, size);
-                            setAddedProductId(product._id);
-
+                        <select
+                          value={selectedSizes[product._id] || ""}
+                          className="form-select mb-3"
+                          onChange={(e) =>
                             setSelectedSizes((prev) => ({
                               ...prev,
-                              [product._id]: "",
-                            }));
-                          }}
+                              [product._id]: e.target.value,
+                            }))
+                          }
                         >
-                          {addedProductId === product._id
-                            ? "Go To Cart"
-                            : "Add To Cart"}
-                        </button>
+                          <option value="">Select Size</option>
+                          <option value="S">S</option>
+                          <option value="M">M</option>
+                          <option value="L">L</option>
+                          <option value="XL">XL</option>
+                          <option value="XXL">XXL</option>
+                        </select>
 
-                        <Link
-                          to={`/productPage/${product._id}`}
-                          className="btn btn-outline-primary"
-                        >
-                          More Detail
-                        </Link>
+                        <div className="d-flex gap-3 flex-sm-column">
+                          <button
+                            className="btn btn-primary"
+                            onClick={() => {
+                              const size = selectedSizes[product._id];
+
+                              if (!size) {
+                                toast("Please select the size");
+                                return;
+                              }
+
+                              addToCart(product, size);
+                              setAddedProductId(product._id);
+
+                              setSelectedSizes((prev) => ({
+                                ...prev,
+                                [product._id]: "",
+                              }));
+                            }}
+                          >
+                            {addedProductId === product._id
+                              ? "Go To Cart"
+                              : "Add To Cart"}
+                          </button>
+
+                          <Link
+                            to={`/productPage/${product._id}`}
+                            className="btn btn-outline-primary"
+                          >
+                            More Detail
+                          </Link>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
-            )}
+                ))
+              )}
+            </div>
           </div>
-        </div>
-      </main>
-
-      <Footer />
+        </main>
+        <Footer />
+      </div>
     </>
   );
 };

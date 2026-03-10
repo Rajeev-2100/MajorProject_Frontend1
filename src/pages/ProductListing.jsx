@@ -25,6 +25,8 @@ const ProductListing = () => {
     sortedProducts,
   } = useContext(ProductContext);
 
+  console.log('selected Product:', selectedSize)
+
   const { addToCart, addToWishList } = useContext(CartContext);
 
   const finalProducts = categoryName
@@ -363,7 +365,7 @@ const ProductListing = () => {
             </div>
             <div className="d-flex justify-content-between gap-3 gap-md-2 flex-wrap ">
               {finalProducts?.map((product) => (
-                // console.log(product),
+                console.log(product),
                 <>
                   <div
                     key={product._id}
@@ -409,6 +411,7 @@ const ProductListing = () => {
                           })
                         }
                       >
+                        console.log(selectedSize[product._id])
                         <option value="">Select Size</option>
                         <option value="S">S</option>
                         <option value="M">M</option>
@@ -417,12 +420,12 @@ const ProductListing = () => {
                         <option value="XXL">XXL</option>
                       </select>
 
-                      <div className="d-flex flex-column gap-2 mx-5 pt-2">
+                      <div className="d-flex flex-column gap-2 mx-5 pt-2 w-100">
                         <Link
                           to={addedProductId === product._id ? "/cart" : "#"}
                           onClick={(e) => {
                             const size = selectedSize[product._id];
-                            if (!selectedSize) {
+                            if (!size) {
                               e.preventDefault();
                               toast("Please Selected the size");
                               return;
